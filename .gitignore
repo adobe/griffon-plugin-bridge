@@ -1,0 +1,19 @@
+.cache
+coverage
+dist
+lib
+node_modules
+build
+test-reports.xml
+.stage
+db.json
+newrelic.js
+.DS_Store
+lerna-debug.log
+cypress/videos
+
+.tmp
+.nyc_output
+
+// logs
+*.logg
