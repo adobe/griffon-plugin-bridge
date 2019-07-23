@@ -12,18 +12,36 @@ governing permissions and limitations under the License.
 import connectToChild from 'penpal/lib/connectToChild';
 import { ERR_CONNECTION_TIMEOUT } from 'penpal/lib/errorCodes';
 
+const CONNECTION_TIMEOUT_DURATION = 10000;
 const RENDER_TIMEOUT_DURATION = 2000;
 
 export const ERROR_CODES = {
+  CONNECTION_TIMEOUT: 'connectionTimeout',
   RENDER_TIMEOUT: 'renderTimeout',
-  EXTENSION_RESPONSE_TIMEOUT: 'extensionResponseTimeout',
   DESTROYED: 'destroyed'
 };
 
+/**
+ * Loads a plugin iframe and connects all the necessary APIs.
+ * @param {Object} options
+ * @param {string} options.iframe The iframe loading the plugin.
+ * @param {Object} [options.pluginInitOptions={}] The options to be passed to the initial init()
+ * call on the plugin view.
+ * @param {number} [options.connectionTimeoutDuration=10000] The amount of time, in milliseconds,
+ * that must pass while attempting to establish communication with the iframe before rejecting
+ * the returned promise with a CONNECTION_TIMEOUT error code.
+ * @param {number} [options.renderTimeoutDuration=2000] The amount of time, in milliseconds,
+ * that must pass while attempting to render the iframe before rejecting the returned promise
+ * with a RENDER_TIMEOUT error code. This duration begins after communication with the iframe
+ * has been established.
+ */
 export const loadIframe = (options) => {
   const {
     iframe,
-    renderTimeoutDuration = RENDER_TIMEOUT_DURATION
+    pluginInitOptions,
+    connectionTimeoutDuration = CONNECTION_TIMEOUT_DURATION,
+    renderTimeoutDuration = RENDER_TIMEOUT_DURATION,
+    debug = false
   } = options;
 
   const loadPromise = new Promise((resolve, reject) => {
@@ -31,16 +49,27 @@ export const loadIframe = (options) => {
 
     const connection = connectToChild({
       iframe,
+      timeout: connectionTimeoutDuration,
       methods: {
         pluginRegistered: () => {
           connection.promise.then((child) => {
-            clearTimeout(renderTimeoutId);
-            resolve({
-              receiveEvents: (...args) => child.receiveEvents(...args)
+            child.init(pluginInitOptions).then(() => {
+              clearTimeout(renderTimeoutId);
+              resolve({
+                // We hand init back even though we just called init(). This is really for
+                // the sandbox tool's benefit so a developer testing their plugin view can
+                // initialize multiple times with different info.
+                init: child.init,
+                receiveEvents: child.receiveEvents
+              });
             });
+          }).catch((error) => {
+            clearTimeout(renderTimeoutId);
+            reject(error);
           });
         }
-      }
+      },
+      debug
     });
 
     connection.promise.then(() => {

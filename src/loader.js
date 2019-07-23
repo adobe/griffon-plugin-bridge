@@ -9,7 +9,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-// Prevent double-loading of extension bridge.
+// Prevent double-loading of plugin bridge.
 if (!window.pluginBridge) {
   const childPath = '/pluginBridge/pluginBridge-child.js';
 

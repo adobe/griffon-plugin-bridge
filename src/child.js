@@ -22,12 +22,17 @@ const getPluginMethod = (name) => {
   return method.bind(pluginViewMethods);
 };
 
+const init = (...args) => {
+  getPluginMethod('init')(...args);
+};
+
 const receiveEvents = (...args) => {
   getPluginMethod('receiveEvents')(...args);
 };
 
 const connectionPromise = connectToParent({
   methods: {
+    init,
     receiveEvents
   }
 }).promise;
