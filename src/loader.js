@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 
 // Prevent double-loading of plugin bridge.
 if (!window.pluginBridge) {
-  const childPath = '/pluginBridge/pluginBridge-child.js';
+  const childPath = '/pluginBridge/pluginBridge-child.min.js';
 
   window.pluginBridge = { _callQueue: [] };
 

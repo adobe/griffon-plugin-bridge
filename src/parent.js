@@ -21,6 +21,8 @@ export const ERROR_CODES = {
   DESTROYED: 'destroyed'
 };
 
+let destroy;
+
 /**
  * Loads a plugin iframe and connects all the necessary APIs.
  * @param {Object} options
@@ -62,10 +64,10 @@ export const loadIframe = (options) => {
                 init: child.init,
                 receiveEvents: child.receiveEvents
               });
+            }).catch((error) => {
+              clearTimeout(renderTimeoutId);
+              reject(error);
             });
-          }).catch((error) => {
-            clearTimeout(renderTimeoutId);
-            reject(error);
           });
         }
       },
@@ -85,11 +87,14 @@ export const loadIframe = (options) => {
       }
     });
 
-    const destroy = () => {
+    destroy = () => {
       reject(ERROR_CODES.DESTROYED);
       connection.destroy();
     };
   });
 
-  return loadPromise;
+  return {
+    destroy,
+    promise: loadPromise
+  };
 };
