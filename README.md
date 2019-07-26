@@ -16,6 +16,29 @@ The communication layer consists three different pieces:
 
 * **Loader (dist/pluginBridge.min.js):** This loads Child. Loader will be loaded by plugins via a `script` tag. Plugins will always load the same Loader regardless of the environment they are running in. Loader then loads the environment-specific Child.
 
+### API
+
+The bridge provides a plugin (child) the ability to implement the following APIs by calling `window.pluginBridge.register` and passing in an object 
+
+```
+window.pluginBridge.register({
+  init: (settings) => {
+    // do something
+  },
+  receiveEvents: (events) => {
+    // array of session events
+  }
+});
+```
+
+#### init
+
+The parent (Project Griffon UI) calls init once the plugin is registered. Here, Project Griffon UI will pass in any applicable configuration settings.
+
+#### receiveEvents
+
+Project Griffon UI sends any events from initial load of the session view and any subsequent events while the session with the client (Mobile SDK) is active.
+
 ## Scripts
 
 To run tests, run the following command:
