@@ -15,6 +15,8 @@ import { ERR_CONNECTION_TIMEOUT } from 'penpal/lib/errorCodes';
 const CONNECTION_TIMEOUT_DURATION = 10000;
 const RENDER_TIMEOUT_DURATION = 2000;
 
+const noop = () => {};
+
 export const ERROR_CODES = {
   CONNECTION_TIMEOUT: 'connectionTimeout',
   RENDER_TIMEOUT: 'renderTimeout',
@@ -29,6 +31,13 @@ let destroy;
  * @param {string} options.iframe The iframe loading the plugin.
  * @param {Object} [options.pluginInitOptions={}] The options to be passed to the initial init()
  * call on the plugin view.
+ * @param {Function} [options.annotateEvent] The function to call when the plugin view requests
+ * that an event should be annotated. It should return a promise to be resolved with the
+ * result of the request.
+ * @param {Function} [options.selectEvent] The function to call when a main plugin view requests
+ * that an event should be selected. This will toggle selectedEvents for a secondary plugin view.
+ * This function should return a promise to be resolved with the result of the selection.
+ * result of the request.
  * @param {number} [options.connectionTimeoutDuration=10000] The amount of time, in milliseconds,
  * that must pass while attempting to establish communication with the iframe before rejecting
  * the returned promise with a CONNECTION_TIMEOUT error code.
@@ -39,11 +48,13 @@ let destroy;
  */
 export const loadIframe = (options) => {
   const {
+    annotateEvent = noop,
+    connectionTimeoutDuration = CONNECTION_TIMEOUT_DURATION,
+    debug = false,
     iframe,
     pluginInitOptions,
-    connectionTimeoutDuration = CONNECTION_TIMEOUT_DURATION,
     renderTimeoutDuration = RENDER_TIMEOUT_DURATION,
-    debug = false
+    selectEvent = noop
   } = options;
 
   const loadPromise = new Promise((resolve, reject) => {
@@ -53,6 +64,7 @@ export const loadIframe = (options) => {
       iframe,
       timeout: connectionTimeoutDuration,
       methods: {
+        annotateEvent,
         pluginRegistered: () => {
           connection.promise.then((child) => {
             child.init(pluginInitOptions).then(() => {
@@ -62,14 +74,16 @@ export const loadIframe = (options) => {
                 // the sandbox tool's benefit so a developer testing their plugin view can
                 // initialize multiple times with different info.
                 init: child.init,
-                receiveEvents: child.receiveEvents
+                receiveEvents: child.receiveEvents,
+                selectedEvents: child.selectedEvents
               });
             }).catch((error) => {
               clearTimeout(renderTimeoutId);
               reject(error);
             });
           });
-        }
+        },
+        selectEvent
       },
       debug
     });

@@ -22,7 +22,9 @@ if (!window.pluginBridge) {
   const childURL = `${anchor.protocol}//${anchor.hostname}${port}${childPath}`;
 
   [
-    'register'
+    'annotateEvent',
+    'register',
+    'selectEvent'
   ].forEach((methodName) => {
     window.pluginBridge[methodName] = (...args) => new Promise((resolve, reject) => {
       /* eslint-disable no-underscore-dangle */
