@@ -15,7 +15,7 @@ import { ERR_CONNECTION_TIMEOUT } from 'penpal/lib/errorCodes';
 const CONNECTION_TIMEOUT_DURATION = 10000;
 const RENDER_TIMEOUT_DURATION = 2000;
 
-const noop = () => {};
+const NOOP = () => {};
 
 export const ERROR_CODES = {
   CONNECTION_TIMEOUT: 'connectionTimeout',
@@ -48,13 +48,13 @@ let destroy;
  */
 export const loadIframe = (options) => {
   const {
-    annotateEvent = noop,
+    annotateEvent = NOOP,
     connectionTimeoutDuration = CONNECTION_TIMEOUT_DURATION,
     debug = false,
     iframe,
     pluginInitOptions,
     renderTimeoutDuration = RENDER_TIMEOUT_DURATION,
-    selectEvent = noop
+    selectEvent = NOOP
   } = options;
 
   const loadPromise = new Promise((resolve, reject) => {

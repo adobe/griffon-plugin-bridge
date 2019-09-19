@@ -9,17 +9,17 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { loadIframe, ERROR_CODES } from '../../src/parent';
+import { loadIframe, ERROR_CODES, NOOP } from '../../src/parent';
 
 describe('parent', () => {
   let bridge;
 
-  const createAndLoadIframe = (fixture) => {
+  const createAndLoadIframe = (fixture, options) => {
     const iframe = document.createElement('iframe');
     iframe.src = `http://${window.location.hostname}:9800/${fixture}`;
     document.body.appendChild(iframe);
 
-    return loadIframe({ iframe });
+    return loadIframe({ iframe, ...options });
   };
 
   afterEach(() => {
@@ -36,6 +36,8 @@ describe('parent', () => {
 
     bridge.promise.then((child) => {
       expect(child.init).toEqual(jasmine.any(Function));
+      expect(child.receiveEvents).toEqual(jasmine.any(Function));
+      expect(child.selectedEvents).toEqual(jasmine.any(Function));
       done();
     });
   });
@@ -85,5 +87,42 @@ describe('parent', () => {
     });
 
     bridge.destroy();
+  });
+
+  describe('parent APIs', () => {
+    let annotateEvent;
+    let selectEvent;
+
+    beforeEach(() => {
+      annotateEvent = jasmine.createSpy();
+      selectEvent = jasmine.createSpy();
+    });
+
+    it('proxies the parent APIs', (done) => {
+      bridge = createAndLoadIframe('griffonAPIs.html', {
+        annotateEvent,
+        selectEvent
+      });
+
+      bridge.promise.then((child) => {
+        child.receiveEvents().then(() => {
+          expect(annotateEvent).toHaveBeenCalled();
+          expect(selectEvent).toHaveBeenCalled();
+          done();
+        });
+      });
+    });
+
+    it('does not fail if child calls NOOP parent methods', (done) => {
+      bridge = createAndLoadIframe('griffonAPIs.html');
+
+      bridge.promise.then((child) => {
+        child.receiveEvents().then(() => {
+          expect(annotateEvent).toHaveBeenCalled();
+          expect(selectEvent).toHaveBeenCalled();
+          done();
+        });
+      });
+    });
   });
 });
