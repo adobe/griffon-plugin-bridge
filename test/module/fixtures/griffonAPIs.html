@@ -7,7 +7,12 @@
     <script>
       pluginBridge.register({
         init: function(info) {},
-        receiveEvents: function() {},
+        receiveEvents: function() {
+          console.log('receiveEvents');
+          pluginBridge.annotateEvent()
+          pluginBridge.annotateSession()
+          pluginBridge.selectEvents()
+        },
         receiveSelectedEvents: function() {}
       });
     </script>

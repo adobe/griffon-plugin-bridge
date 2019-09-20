@@ -30,20 +30,37 @@ const receiveEvents = (...args) => {
   getPluginMethod('receiveEvents')(...args);
 };
 
+const receiveSelectedEvents = (...args) => {
+  getPluginMethod('receiveSelectedEvents')(...args);
+};
+
 const connectionPromise = connectToParent({
   methods: {
     init,
-    receiveEvents
+    receiveEvents,
+    receiveSelectedEvents
   }
 }).promise;
 
+const getParentMethod = methodName => (...args) =>
+  connectionPromise.then((parent) => {
+    if (parent[methodName]) {
+      return parent[methodName](...args);
+    }
+
+    throw new Error(`An error occured while calling ${methodName}. The method is unavailable`);
+  });
+
 const pluginBridge = {
+  annotateEvent: getParentMethod('annotateEvent'),
+  annotateSession: getParentMethod('annotateSession'),
   register: (methods) => {
     pluginViewMethods = {
       ...methods
     };
     connectionPromise.then(parent => parent.pluginRegistered());
-  }
+  },
+  selectEvents: getParentMethod('selectEvents')
 };
 
 const executeQueuedCall = call => Promise.resolve(pluginBridge[call.methodName](...call.args))

@@ -18,6 +18,24 @@ The communication layer consists three different pieces:
 
 ### API
 
+#### Griffon UI Methods
+
+The bridge provides a plugin (child) to call methods into the Griffon UI (parent).
+
+##### annotateEvent
+
+Allows a plugin to annotate an event
+
+##### annotateSession
+
+Allows a plugin to annotate a session
+
+##### selectEvents
+
+Allows a plugin to toggle selected events to pass to other plugins via `receiveSelectedEvents`
+
+#### Plugin Methods
+
 The bridge provides a plugin (child) the ability to implement the following APIs by calling `window.pluginBridge.register` and passing in an object 
 
 ```
@@ -27,17 +45,24 @@ window.pluginBridge.register({
   },
   receiveEvents: (events) => {
     // array of session events
+  },
+  receiveSelectedEvents: (events) => {
+    // subset of session events
   }
 });
 ```
 
-#### init
+##### init
 
 The parent (Project Griffon UI) calls init once the plugin is registered. Here, Project Griffon UI will pass in any applicable configuration settings.
 
-#### receiveEvents
+##### receiveEvents
 
 Project Griffon UI sends any events from initial load of the session view and any subsequent events while the session with the client (Mobile SDK) is active.
+
+##### receiveSelectedEvents
+
+Project Griffon UI sends events selected from the result of a plugin calling `selectEvents` on the bridge.
 
 ## Scripts
 
