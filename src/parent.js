@@ -31,13 +31,15 @@ let destroy;
  * @param {string} options.iframe The iframe loading the plugin.
  * @param {Object} [options.pluginInitOptions={}] The options to be passed to the initial init()
  * call on the plugin view.
- * @param {Function} [options.annotateEvent] The function to call when the plugin view requests
+ * @param {Function} [options.annotateEvent] The function to call when a plugin view requests
  * that an event should be annotated. It should return a promise to be resolved with the
  * result of the request.
- * @param {Function} [options.selectEvent] The function to call when a main plugin view requests
- * that an event should be selected. This will toggle selectedEvents for a secondary plugin view.
- * This function should return a promise to be resolved with the result of the selection.
+ * @param {Function} [options.annotateSession] The function to call when a plugin view requests
+ * that a session should be annotated. It should return a promise to be resolved with the
  * result of the request.
+ * @param {Function} [options.selectEvent] The function to call when a plugin view requests
+ * that an event should be selected. This will call receiveSelectedEvents for other plugins.
+ * This function should return a promise to be resolved with the result of the selection.
  * @param {number} [options.connectionTimeoutDuration=10000] The amount of time, in milliseconds,
  * that must pass while attempting to establish communication with the iframe before rejecting
  * the returned promise with a CONNECTION_TIMEOUT error code.
@@ -49,12 +51,13 @@ let destroy;
 export const loadIframe = (options) => {
   const {
     annotateEvent = NOOP,
+    annotateSession = NOOP,
     connectionTimeoutDuration = CONNECTION_TIMEOUT_DURATION,
     debug = false,
     iframe,
     pluginInitOptions,
     renderTimeoutDuration = RENDER_TIMEOUT_DURATION,
-    selectEvent = NOOP
+    selectEvents = NOOP
   } = options;
 
   const loadPromise = new Promise((resolve, reject) => {
@@ -65,6 +68,7 @@ export const loadIframe = (options) => {
       timeout: connectionTimeoutDuration,
       methods: {
         annotateEvent,
+        annotateSession,
         pluginRegistered: () => {
           connection.promise.then((child) => {
             child.init(pluginInitOptions).then(() => {
@@ -75,7 +79,7 @@ export const loadIframe = (options) => {
                 // initialize multiple times with different info.
                 init: child.init,
                 receiveEvents: child.receiveEvents,
-                selectedEvents: child.selectedEvents
+                receiveSelectedEvents: child.receiveSelectedEvents
               });
             }).catch((error) => {
               clearTimeout(renderTimeoutId);
@@ -83,7 +87,7 @@ export const loadIframe = (options) => {
             });
           });
         },
-        selectEvent
+        selectEvents
       },
       debug
     });

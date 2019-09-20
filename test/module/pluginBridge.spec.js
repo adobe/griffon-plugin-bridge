@@ -9,7 +9,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { loadIframe, ERROR_CODES, NOOP } from '../../src/parent';
+import { loadIframe, ERROR_CODES } from '../../src/parent';
 
 describe('parent', () => {
   let bridge;
@@ -37,7 +37,7 @@ describe('parent', () => {
     bridge.promise.then((child) => {
       expect(child.init).toEqual(jasmine.any(Function));
       expect(child.receiveEvents).toEqual(jasmine.any(Function));
-      expect(child.selectedEvents).toEqual(jasmine.any(Function));
+      expect(child.receiveSelectedEvents).toEqual(jasmine.any(Function));
       done();
     });
   });
@@ -91,23 +91,27 @@ describe('parent', () => {
 
   describe('parent APIs', () => {
     let annotateEvent;
-    let selectEvent;
+    let annotateSession;
+    let selectEvents;
 
     beforeEach(() => {
       annotateEvent = jasmine.createSpy();
-      selectEvent = jasmine.createSpy();
+      annotateSession = jasmine.createSpy();
+      selectEvents = jasmine.createSpy();
     });
 
     it('proxies the parent APIs', (done) => {
       bridge = createAndLoadIframe('griffonAPIs.html', {
         annotateEvent,
-        selectEvent
+        annotateSession,
+        selectEvents
       });
 
       bridge.promise.then((child) => {
         child.receiveEvents().then(() => {
           expect(annotateEvent).toHaveBeenCalled();
-          expect(selectEvent).toHaveBeenCalled();
+          expect(annotateSession).toHaveBeenCalled();
+          expect(selectEvents).toHaveBeenCalled();
           done();
         });
       });
@@ -118,8 +122,9 @@ describe('parent', () => {
 
       bridge.promise.then((child) => {
         child.receiveEvents().then(() => {
-          expect(annotateEvent).toHaveBeenCalled();
-          expect(selectEvent).toHaveBeenCalled();
+          expect(annotateEvent).not.toHaveBeenCalled();
+          expect(annotateSession).not.toHaveBeenCalled();
+          expect(selectEvents).not.toHaveBeenCalled();
           done();
         });
       });

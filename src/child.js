@@ -30,15 +30,15 @@ const receiveEvents = (...args) => {
   getPluginMethod('receiveEvents')(...args);
 };
 
-const selectedEvents = (...args) => {
-  getPluginMethod('selectedEvents')(...args);
+const receiveSelectedEvents = (...args) => {
+  getPluginMethod('receiveSelectedEvents')(...args);
 };
 
 const connectionPromise = connectToParent({
   methods: {
     init,
     receiveEvents,
-    selectedEvents
+    receiveSelectedEvents
   }
 }).promise;
 
@@ -53,13 +53,14 @@ const getParentMethod = methodName => (...args) =>
 
 const pluginBridge = {
   annotateEvent: getParentMethod('annotateEvent'),
+  annotateSession: getParentMethod('annotateSession'),
   register: (methods) => {
     pluginViewMethods = {
       ...methods
     };
     connectionPromise.then(parent => parent.pluginRegistered());
   },
-  selectEvent: getParentMethod('selectEvent')
+  selectEvents: getParentMethod('selectEvents')
 };
 
 const executeQueuedCall = call => Promise.resolve(pluginBridge[call.methodName](...call.args))

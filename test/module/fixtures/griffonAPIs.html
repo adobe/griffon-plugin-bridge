@@ -8,10 +8,12 @@
       pluginBridge.register({
         init: function(info) {},
         receiveEvents: function() {
+          console.log('receiveEvents');
           pluginBridge.annotateEvent()
-          pluginBridge.selectEvent()
+          pluginBridge.annotateSession()
+          pluginBridge.selectEvents()
         },
-        selectedEvents: function() {}
+        receiveSelectedEvents: function() {}
       });
     </script>
   </head>
