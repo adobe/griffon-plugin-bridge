@@ -31,7 +31,12 @@ module.exports = function (config) {
   serveFixtures();
 
   config.set({
-    browsers: ['Chrome'],
+    customLaunchers: {
+      ChromeHeadlessNoSandbox: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox']
+      }
+    },
     frameworks: ['jasmine'],
     files: [
       { pattern: 'test/**/*.js', watched: false },
