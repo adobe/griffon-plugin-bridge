@@ -26,7 +26,7 @@ node('uislave') {
                 export ARTIFACTORY_USER=novaprj
                 make ci
             '''
-            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'coverage/lcov-report/', reportFiles: 'index.html', reportName: 'Griffon Plugin Bridge HTML Report', reportTitles: ''])
+            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'coverage/', reportFiles: 'index.html', reportName: 'Griffon Plugin Bridge HTML Report', reportTitles: ''])
         }
     }
 }
