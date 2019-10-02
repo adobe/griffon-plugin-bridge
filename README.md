@@ -62,7 +62,7 @@ Project Griffon UI sends any events from initial load of the session view and an
 
 ##### receiveSelectedEvents
 
-Project Griffon UI sends events selected from the result of a plugin calling `selectEvents` on the bridge.
+Project Griffon UI sends an array of events uuids selected from the result of a plugin calling `selectEvents` on the bridge.
 
 ## Scripts
 
