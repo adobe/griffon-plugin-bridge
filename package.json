@@ -7,7 +7,8 @@
     "url": "git+ssh://git@git.corp.adobe.com:dms-mobile/griffon-plugin-bridge.git"
   },
   "files": [
-    "dist/"
+    "dist/",
+    "lib/"
   ],
   "scripts": {
     "prebuild": "rm -rf dist && mkdir dist && rm -rf lib",
