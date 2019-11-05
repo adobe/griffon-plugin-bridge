@@ -48,6 +48,9 @@ window.pluginBridge.register({
   },
   receiveSelectedEvents: (events) => {
     // subset of session events
+  },
+  receiveSession: (session) => {
+    // session information including session annotations
   }
 });
 ```
