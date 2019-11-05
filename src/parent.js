@@ -79,7 +79,8 @@ export const loadIframe = (options) => {
                 // initialize multiple times with different info.
                 init: child.init,
                 receiveEvents: child.receiveEvents,
-                receiveSelectedEvents: child.receiveSelectedEvents
+                receiveSelectedEvents: child.receiveSelectedEvents,
+                receiveSession: child.receiveSession
               });
             }).catch((error) => {
               clearTimeout(renderTimeoutId);

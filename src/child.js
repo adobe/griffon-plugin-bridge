@@ -34,11 +34,16 @@ const receiveSelectedEvents = (...args) => {
   getPluginMethod('receiveSelectedEvents')(...args);
 };
 
+const receiveSession = (...args) => {
+  getPluginMethod('receiveSession')(...args);
+};
+
 const connectionPromise = connectToParent({
   methods: {
     init,
     receiveEvents,
-    receiveSelectedEvents
+    receiveSelectedEvents,
+    receiveSession
   }
 }).promise;
 
