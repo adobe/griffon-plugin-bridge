@@ -24,7 +24,7 @@ The bridge provides a plugin (child) to call methods into the Griffon UI (parent
 
 ##### annotateEvent
 
-Allows a plugin to annotate an event
+Allows a plugin to annotate an event. Annotations are additional data to events that need to be persisted - like third-party API results. The annotation is stored as an object with two properties: `type` and `payload`. The plugin UUID is used as the type and the data provided in the annotateEvent call is stored in the payload property. An event will have an array of annotations.
 
 ##### annotateSession
 
