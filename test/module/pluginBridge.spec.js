@@ -38,6 +38,7 @@ describe('parent', () => {
       expect(child.init).toEqual(jasmine.any(Function));
       expect(child.receiveEvents).toEqual(jasmine.any(Function));
       expect(child.receiveSelectedEvents).toEqual(jasmine.any(Function));
+      expect(child.receiveSession).toEqual(jasmine.any(Function));
       done();
     });
   });
