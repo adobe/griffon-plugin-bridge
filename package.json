@@ -1,11 +1,7 @@
 {
-  "name": "@nebula/griffon-plugin-bridge",
+  "name": "@adobe/griffon-plugin-bridge",
   "version": "0.0.1",
   "description": "Communication API between Project Griffon and plugins.",
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@git.corp.adobe.com:dms-mobile/griffon-plugin-bridge.git"
-  },
   "files": [
     "dist/",
     "lib/"
@@ -22,11 +18,6 @@
   },
   "author": "Adobe Systems",
   "license": "Apache-2.0",
-  "config": {
-    "commitizen": {
-      "path": "node_modules/@nebula/cz-lerna-changelog/"
-    }
-  },
   "dependencies": {
     "penpal": "^4.1.1"
   },
@@ -35,8 +26,6 @@
     "@babel/core": "^7.5.5",
     "@babel/plugin-syntax-object-rest-spread": "^7.2.0",
     "@babel/preset-env": "^7.5.5",
-    "@nebula/cz-lerna-changelog": "1.0.0",
-    "@nebula/nova-semantic-release": "^1.2.2",
     "babel-eslint": "^10.0.2",
     "babel-loader": "^8.0.6",
     "babel-plugin-istanbul": "^5.2.0",
