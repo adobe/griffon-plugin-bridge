@@ -17,26 +17,22 @@ jobs:
           paths:
             - ./node_modules
       - run:
-          name: lerna bootstrap
-          command: npx lerna bootstrap
-      - run:
           name: build
           command: npm run build
       - run:
           name: eslint
           command: npm run lint -- --format junit -o reports/junit/js-lint-results.xml
+      - run: mkdir ~/junit
       - run:
-          name: Run tests with JUnit as reporter
-          command: npm run coverage -- --ci --runInBand --reporters=default --reporters=jest-junit
+          command: karma start ./karma.conf.js
           environment:
-            JEST_JUNIT_OUTPUT: "reports/junit/js-test-results.xml"
+            JUNIT_REPORT_PATH: ./junit/
+            JUNIT_REPORT_NAME: test-results.xml
+          when: always 
       - store_test_results:
-          path: reports/junit
+          path: ./junit
       - store_artifacts: # for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
-          path: coverage
-          prefix: coverage
-      - store_test_results: # for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
-          path: reports/junit
+          path: ./junit
       - run:
           name: Upload Code Coverage Report
           command: npx codecov
