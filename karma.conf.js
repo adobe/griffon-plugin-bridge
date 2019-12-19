@@ -54,7 +54,7 @@ module.exports = function (config) {
     preprocessors: {
       'test/**/*.js': ['webpack']
     },
-    reporters: ['progress', 'coverage'],
+    reporters: ['progress', 'junit', 'coverage'],
     coverageReporter: {
       check: {
         global: {
@@ -69,6 +69,11 @@ module.exports = function (config) {
         { type: 'html', subdir: '.' },
         { type: 'text', subdir: '.' }
       ]
+    },
+    junitReporter: {
+      outputDir: process.env.JUNIT_REPORT_PATH,
+      outputFile: process.env.JUNIT_REPORT_NAME,
+      useBrowserName: false
     },
     webpack: webpackConfig(),
     webpackServer: {

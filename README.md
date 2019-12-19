@@ -2,13 +2,13 @@
 
 ## Usage
 
-The Project Griffon UI consumes the bridge via the `@nebula/griffon-plugin-bridge` npm package while plugin views consume the bridge by loading a CDN-hosted script
+The Project Griffon UI consumes the bridge via the `@adobe/griffon-plugin-bridge` npm package while plugin views consume the bridge by loading a CDN-hosted script
 
 The communication layer consists three different pieces:
 
 * **Parent (lib/parent.js):** This is the portion of the communication layer that Project Griffon UI uses by importing it directly:
 
-  `import { loadIframe } from '@nebula/griffon-plugin-bridge';`
+  `import { loadIframe } from '@adobe/griffon-plugin-bridge';`
   
   The arguments, return value, and behavior of `loadIframe` can be found within the code documentation in [parent.js](src/parent.js).
 
@@ -32,7 +32,7 @@ Allows a plugin to annotate a session
 
 ##### selectEvents
 
-Allows a plugin to toggle selected events to pass to other plugins via `receiveSelectedEvents`
+Allows a plugin to toggle selected events to pass to other plugins via `receiveSelectedEvents`. The payload needs to be an array of event uuids.
 
 #### Plugin Methods
 
@@ -61,11 +61,14 @@ The parent (Project Griffon UI) calls init once the plugin is registered. Here, 
 
 ##### receiveEvents
 
-Project Griffon UI sends any events from initial load of the session view and any subsequent events while the session with the client (Mobile SDK) is active.
+Currently, Project Griffon UI will send all events via this method on all registered plugins in the following scenarios:
+  * Upon initial load of the plugin
+  * Any time a new event is received while the session with the client (Mobile SDK) is active
+  * Any time an event is annotated by a plugin
 
 ##### receiveSelectedEvents
 
-Project Griffon UI sends an array of events uuids selected from the result of a plugin calling `selectEvents` on the bridge.
+Project Griffon UI sends an array of event uuids selected from the result of a plugin calling `selectEvents` on the bridge.
 
 ## Scripts
 
@@ -87,3 +90,7 @@ npm run build
 ## Contributing
 
 Contributions are welcomed! Read the [Contributing Guide](CONTRIBUTING.md) for more information.
+
+## Licensing
+
+This project is licensed under the Apache V2 License. See [LICENSE](LICENSE.md) for more information.
