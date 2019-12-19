@@ -32,7 +32,7 @@ Allows a plugin to annotate a session
 
 ##### selectEvents
 
-Allows a plugin to toggle selected events to pass to other plugins via `receiveSelectedEvents`
+Allows a plugin to toggle selected events to pass to other plugins via `receiveSelectedEvents`. The payload needs to be an array of event uuids.
 
 #### Plugin Methods
 
@@ -61,11 +61,14 @@ The parent (Project Griffon UI) calls init once the plugin is registered. Here, 
 
 ##### receiveEvents
 
-Project Griffon UI sends any events from initial load of the session view and any subsequent events while the session with the client (Mobile SDK) is active.
+Currently, Project Griffon UI will send all events via this method on all registered plugins in the following scenarios:
+  * Upon initial load of the plugin
+  * Any time a new event is received while the session with the client (Mobile SDK) is active
+  * Any time an event is annotated by a plugin
 
 ##### receiveSelectedEvents
 
-Project Griffon UI sends an array of events uuids selected from the result of a plugin calling `selectEvents` on the bridge.
+Project Griffon UI sends an array of event uuids selected from the result of a plugin calling `selectEvents` on the bridge.
 
 ## Scripts
 
