@@ -94,18 +94,21 @@ describe('parent', () => {
     let annotateEvent;
     let annotateSession;
     let selectEvents;
+    let sendCommand;
 
     beforeEach(() => {
       annotateEvent = jasmine.createSpy();
       annotateSession = jasmine.createSpy();
       selectEvents = jasmine.createSpy();
+      sendCommand = jasmine.createSpy();
     });
 
     it('proxies the parent APIs', (done) => {
       bridge = createAndLoadIframe('griffonAPIs.html', {
         annotateEvent,
         annotateSession,
-        selectEvents
+        selectEvents,
+        sendCommand
       });
 
       bridge.promise.then((child) => {
@@ -113,6 +116,7 @@ describe('parent', () => {
           expect(annotateEvent).toHaveBeenCalled();
           expect(annotateSession).toHaveBeenCalled();
           expect(selectEvents).toHaveBeenCalled();
+          expect(sendCommand).toHaveBeenCalled();
           done();
         });
       });
@@ -126,6 +130,7 @@ describe('parent', () => {
           expect(annotateEvent).not.toHaveBeenCalled();
           expect(annotateSession).not.toHaveBeenCalled();
           expect(selectEvents).not.toHaveBeenCalled();
+          expect(sendCommand).not.toHaveBeenCalled();
           done();
         });
       });
