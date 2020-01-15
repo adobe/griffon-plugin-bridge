@@ -9,8 +9,8 @@ The communication layer consists three different pieces:
 * **Parent (lib/parent.js):** This is the portion of the communication layer that Project Griffon UI uses by importing it directly:
 
   `import { loadIframe } from '@adobe/griffon-plugin-bridge';`
-  
-  The arguments, return value, and behavior of `loadIframe` can be found within the code documentation in [parent.js](src/parent.js).
+
+The arguments, return value, and behavior of `loadIframe` can be found within the code documentation in [parent.js](src/parent.js).
 
 * **Child (dist/pluginBridge-child.min.js):** This is the portion of the communication layer that plugin views use, though plugin views don't load it directly (see Loader). This file is hosted by the Project Griffon UI which means it may be different based on the environment. This is important since it needs to be compatible with the Parent that is being used by the Project Griffon UI in the same environment.
 
@@ -34,9 +34,21 @@ Allows a plugin to annotate a session
 
 Allows a plugin to toggle selected events to pass to other plugins via `receiveSelectedEvents`. The payload needs to be an array of event uuids.
 
+##### sendCommand
+
+Sends a command to the SKD via the Griffon server. The format should be:
+```
+{
+  type: 'command to trigger',
+  payload: { ... }
+}
+```
+where the payload is an object containing data for the SDK to process when running the command.
+
+
 #### Plugin Methods
 
-The bridge provides a plugin (child) the ability to implement the following APIs by calling `window.pluginBridge.register` and passing in an object 
+The bridge provides a plugin (child) the ability to implement the following APIs by calling `window.pluginBridge.register` and passing in an object
 
 ```
 window.pluginBridge.register({
