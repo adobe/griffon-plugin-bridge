@@ -40,6 +40,9 @@ let destroy;
  * @param {Function} [options.selectEvent] The function to call when a plugin view requests
  * that an event should be selected. This will call receiveSelectedEvents for other plugins.
  * This function should return a promise to be resolved with the result of the selection.
+ * @param {Function} [options.sendCommand] The function to call when a plugin view wants to
+ * send a command back to the Griffon SDK. The command is called with a { type, payload } where
+ * type is the name of the command and payload is the execution instructions.
  * @param {number} [options.connectionTimeoutDuration=10000] The amount of time, in milliseconds,
  * that must pass while attempting to establish communication with the iframe before rejecting
  * the returned promise with a CONNECTION_TIMEOUT error code.
@@ -57,7 +60,8 @@ export const loadIframe = (options) => {
     iframe,
     pluginInitOptions,
     renderTimeoutDuration = RENDER_TIMEOUT_DURATION,
-    selectEvents = NOOP
+    selectEvents = NOOP,
+    sendCommand = NOOP
   } = options;
 
   const loadPromise = new Promise((resolve, reject) => {
@@ -88,7 +92,8 @@ export const loadIframe = (options) => {
             });
           });
         },
-        selectEvents
+        selectEvents,
+        sendCommand
       },
       debug
     });

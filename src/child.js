@@ -65,7 +65,8 @@ const pluginBridge = {
     };
     connectionPromise.then(parent => parent.pluginRegistered());
   },
-  selectEvents: getParentMethod('selectEvents')
+  selectEvents: getParentMethod('selectEvents'),
+  sendCommand:  getParentMethod('sendCommand')
 };
 
 const executeQueuedCall = call => Promise.resolve(pluginBridge[call.methodName](...call.args))
