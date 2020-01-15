@@ -1,0 +1,7 @@
+#!/usr/bin/expect -f
+spawn ssh-add /home/jenkins/.ssh/id_rsa
+expect "Enter passphrase for /home/jenkins/.ssh/id_rsa:"
+send $env(SSH_KEY_PASSWORD);
+send "\n"
+expect "Identity added: /home/jenkins/.ssh/id_rsa (novaprj@adobe.com)"
+interact
