@@ -24,6 +24,7 @@ if (!window.pluginBridge) {
   [
     'annotateEvent',
     'annotateSession',
+    'navigateTo',
     'register',
     'selectEvents',
     'sendCommand'
