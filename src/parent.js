@@ -37,6 +37,8 @@ let destroy;
  * @param {Function} [options.annotateSession] The function to call when a plugin view requests
  * that a session should be annotated. It should return a promise to be resolved with the
  * result of the request.
+ * @param {Function} [options.navigateTo] The function to call when a plugin view wants to
+ * navigate to another plugin view for deep linking
  * @param {Function} [options.selectEvent] The function to call when a plugin view requests
  * that an event should be selected. This will call receiveSelectedEvents for other plugins.
  * This function should return a promise to be resolved with the result of the selection.
@@ -58,6 +60,7 @@ export const loadIframe = (options) => {
     connectionTimeoutDuration = CONNECTION_TIMEOUT_DURATION,
     debug = false,
     iframe,
+    navigateTo,
     pluginInitOptions,
     renderTimeoutDuration = RENDER_TIMEOUT_DURATION,
     selectEvents = NOOP,
@@ -73,6 +76,7 @@ export const loadIframe = (options) => {
       methods: {
         annotateEvent,
         annotateSession,
+        navigateTo,
         pluginRegistered: () => {
           connection.promise.then((child) => {
             child.init(pluginInitOptions).then(() => {
@@ -82,6 +86,7 @@ export const loadIframe = (options) => {
                 // the sandbox tool's benefit so a developer testing their plugin view can
                 // initialize multiple times with different info.
                 init: child.init,
+                navigateTo: child.navigateTo,
                 receiveEvents: child.receiveEvents,
                 receiveSelectedEvents: child.receiveSelectedEvents,
                 receiveSession: child.receiveSession
