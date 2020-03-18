@@ -53,7 +53,6 @@ where the payload is an object containing data for the SDK to process when runni
 #### Plugin Methods
 
 The bridge provides a plugin (child) the ability to implement the following APIs by calling `window.pluginBridge.register` and passing in an object
->>>>>>> internal/master
 
 ```
 window.pluginBridge.register({
