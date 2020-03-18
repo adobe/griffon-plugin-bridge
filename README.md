@@ -2,13 +2,11 @@
 
 ## Usage
 
-<<<<<<< HEAD
 The Project Griffon UI consumes the bridge via the `@adobe/griffon-plugin-bridge` npm package while plugin views consume the bridge by loading a CDN-hosted script
 
 The communication layer consists three different pieces:
 
 * **Parent (lib/parent.js):** This is the portion of the communication layer that Project Griffon UI uses by importing it directly:
-
 
   `import { loadIframe } from '@adobe/griffon-plugin-bridge';`
   
