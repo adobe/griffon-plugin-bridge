@@ -36,6 +36,7 @@ describe('parent', () => {
 
     bridge.promise.then((child) => {
       expect(child.init).toEqual(jasmine.any(Function));
+      expect(child.navigateTo).toEqual(jasmine.any(Function));
       expect(child.receiveEvents).toEqual(jasmine.any(Function));
       expect(child.receiveSelectedEvents).toEqual(jasmine.any(Function));
       expect(child.receiveSession).toEqual(jasmine.any(Function));
@@ -93,26 +94,34 @@ describe('parent', () => {
   describe('parent APIs', () => {
     let annotateEvent;
     let annotateSession;
+    let navigateTo;
     let selectEvents;
+    let sendCommand;
 
     beforeEach(() => {
       annotateEvent = jasmine.createSpy();
       annotateSession = jasmine.createSpy();
+      navigateTo = jasmine.createSpy();
       selectEvents = jasmine.createSpy();
+      sendCommand = jasmine.createSpy();
     });
 
     it('proxies the parent APIs', (done) => {
       bridge = createAndLoadIframe('griffonAPIs.html', {
         annotateEvent,
         annotateSession,
-        selectEvents
+        navigateTo,
+        selectEvents,
+        sendCommand
       });
 
       bridge.promise.then((child) => {
         child.receiveEvents().then(() => {
           expect(annotateEvent).toHaveBeenCalled();
           expect(annotateSession).toHaveBeenCalled();
+          expect(navigateTo).toHaveBeenCalled();
           expect(selectEvents).toHaveBeenCalled();
+          expect(sendCommand).toHaveBeenCalled();
           done();
         });
       });
@@ -125,7 +134,9 @@ describe('parent', () => {
         child.receiveEvents().then(() => {
           expect(annotateEvent).not.toHaveBeenCalled();
           expect(annotateSession).not.toHaveBeenCalled();
+          expect(navigateTo).not.toHaveBeenCalled();
           expect(selectEvents).not.toHaveBeenCalled();
+          expect(sendCommand).not.toHaveBeenCalled();
           done();
         });
       });
