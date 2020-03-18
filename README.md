@@ -2,11 +2,13 @@
 
 ## Usage
 
+<<<<<<< HEAD
 The Project Griffon UI consumes the bridge via the `@adobe/griffon-plugin-bridge` npm package while plugin views consume the bridge by loading a CDN-hosted script
 
 The communication layer consists three different pieces:
 
 * **Parent (lib/parent.js):** This is the portion of the communication layer that Project Griffon UI uses by importing it directly:
+
 
   `import { loadIframe } from '@adobe/griffon-plugin-bridge';`
   
@@ -30,18 +32,38 @@ Allows a plugin to annotate an event. Annotations are additional data to events 
 
 Allows a plugin to annotate a session
 
+##### navigateTo
+
+Allows a plugin to navigate to another view for deep linking
+
 ##### selectEvents
 
 Allows a plugin to toggle selected events to pass to other plugins via `receiveSelectedEvents`. The payload needs to be an array of event uuids.
 
+##### sendCommand
+
+Sends a command to the SDK via the Griffon server. The format should be:
+```
+{
+  type: 'command to trigger',
+  payload: { ... }
+}
+```
+where the payload is an object containing data for the SDK to process when running the command.
+
+
 #### Plugin Methods
 
-The bridge provides a plugin (child) the ability to implement the following APIs by calling `window.pluginBridge.register` and passing in an object 
+The bridge provides a plugin (child) the ability to implement the following APIs by calling `window.pluginBridge.register` and passing in an object
+>>>>>>> internal/master
 
 ```
 window.pluginBridge.register({
   init: (settings) => {
     // do something
+  },
+  navigateTo: (path) => {
+    // do something based on the current path
   },
   receiveEvents: (events) => {
     // array of session events
@@ -58,6 +80,10 @@ window.pluginBridge.register({
 ##### init
 
 The parent (Project Griffon UI) calls init once the plugin is registered. Here, Project Griffon UI will pass in any applicable configuration settings.
+
+##### navigateTo
+
+The parent (Project Griffon UI) calls navigateTo whenever the URL is updated. The intent here is to provide deep linking capabilities as well as an opportunity for plugins to be good citizens and limit resources when not visible.
 
 ##### receiveEvents
 

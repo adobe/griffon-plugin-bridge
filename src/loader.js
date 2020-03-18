@@ -24,8 +24,10 @@ if (!window.pluginBridge) {
   [
     'annotateEvent',
     'annotateSession',
+    'navigateTo',
     'register',
-    'selectEvents'
+    'selectEvents',
+    'sendCommand'
   ].forEach((methodName) => {
     window.pluginBridge[methodName] = (...args) => new Promise((resolve, reject) => {
       /* eslint-disable no-underscore-dangle */

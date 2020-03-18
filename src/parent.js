@@ -37,9 +37,20 @@ let destroy;
  * @param {Function} [options.annotateSession] The function to call when a plugin view requests
  * that a session should be annotated. It should return a promise to be resolved with the
  * result of the request.
+<<<<<<< HEAD
  * @param {Function} [options.selectEvent] The function to call when a plugin view requests
  * that an event should be selected. This will call receiveSelectedEvents for other plugins.
  * This function should return a promise to be resolved with the result of the selection.
+=======
+ * @param {Function} [options.navigateTo] The function to call when a plugin view wants to
+ * navigate to another plugin view for deep linking
+ * @param {Function} [options.selectEvent] The function to call when a plugin view requests
+ * that an event should be selected. This will call receiveSelectedEvents for other plugins.
+ * This function should return a promise to be resolved with the result of the selection.
+ * @param {Function} [options.sendCommand] The function to call when a plugin view wants to
+ * send a command back to the Griffon SDK. The command is called with a { type, payload } where
+ * type is the name of the command and payload is the execution instructions.
+>>>>>>> internal/master
  * @param {number} [options.connectionTimeoutDuration=10000] The amount of time, in milliseconds,
  * that must pass while attempting to establish communication with the iframe before rejecting
  * the returned promise with a CONNECTION_TIMEOUT error code.
@@ -55,9 +66,11 @@ export const loadIframe = (options) => {
     connectionTimeoutDuration = CONNECTION_TIMEOUT_DURATION,
     debug = false,
     iframe,
+    navigateTo,
     pluginInitOptions,
     renderTimeoutDuration = RENDER_TIMEOUT_DURATION,
-    selectEvents = NOOP
+    selectEvents = NOOP,
+    sendCommand = NOOP
   } = options;
 
   const loadPromise = new Promise((resolve, reject) => {
@@ -69,6 +82,7 @@ export const loadIframe = (options) => {
       methods: {
         annotateEvent,
         annotateSession,
+        navigateTo,
         pluginRegistered: () => {
           connection.promise.then((child) => {
             child.init(pluginInitOptions).then(() => {
@@ -78,6 +92,7 @@ export const loadIframe = (options) => {
                 // the sandbox tool's benefit so a developer testing their plugin view can
                 // initialize multiple times with different info.
                 init: child.init,
+                navigateTo: child.navigateTo,
                 receiveEvents: child.receiveEvents,
                 receiveSelectedEvents: child.receiveSelectedEvents,
                 receiveSession: child.receiveSession
@@ -88,7 +103,8 @@ export const loadIframe = (options) => {
             });
           });
         },
-        selectEvents
+        selectEvents,
+        sendCommand
       },
       debug
     });
