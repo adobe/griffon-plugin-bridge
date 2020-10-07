@@ -22,17 +22,10 @@ jobs:
       - run:
           name: eslint
           command: npm run lint -- --format junit -o reports/junit/js-lint-results.xml
-      - run: mkdir ~/junit
       - run:
-          command: karma start ./karma.conf.js
+          command: npm run test:ci
           environment:
-            JUNIT_REPORT_PATH: ./junit/
             JUNIT_REPORT_NAME: test-results.xml
           when: always 
       - store_test_results:
-          path: ./junit
-      - store_artifacts: # for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
-          path: ./junit
-      - run:
-          name: Upload Code Coverage Report
-          command: npx codecov
+          path: reports/junit
