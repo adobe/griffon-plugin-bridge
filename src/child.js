@@ -11,15 +11,17 @@ governing permissions and limitations under the License.
 
 import connectToParent from 'penpal/lib/connectToParent';
 
-let pluginViewMethods = {};
+const NOOP = () => {};
+
+let viewPluginMethods = {};
 
 const getPluginMethod = (name) => {
-  const method = pluginViewMethods[name];
+  const method = viewPluginMethods[name];
   if (!method) {
     throw new Error(`Unable to call ${name}. The plugin must register a ${name} function using pluginBridge.register().`);
   }
 
-  return method.bind(pluginViewMethods);
+  return method.bind(viewPluginMethods);
 };
 
 const init = (...args) => {
@@ -34,6 +36,10 @@ const receiveEvents = (...args) => {
   getPluginMethod('receiveEvents')(...args);
 };
 
+const receivePlugins = (...args) => {
+  getPluginMethod('receivePlugins')(...args);
+};
+
 const receiveSelectedEvents = (...args) => {
   getPluginMethod('receiveSelectedEvents')(...args);
 };
@@ -42,8 +48,8 @@ const receiveSession = (...args) => {
   getPluginMethod('receiveSession')(...args);
 };
 
-const receivePlugins = (...args) => {
-  getPluginMethod('receivePlugins')(...args);
+const receiveValidation = (...args) => {
+  getPluginMethod('receiveValidation')(...args);
 };
 
 const connectionPromise = connectToParent({
@@ -53,7 +59,8 @@ const connectionPromise = connectToParent({
     receiveEvents,
     receiveSelectedEvents,
     receiveSession,
-    receivePlugins
+    receivePlugins,
+    receiveValidation
   }
 }).promise;
 
@@ -72,7 +79,9 @@ const pluginBridge = {
   deletePlugin: getParentMethod('deletePlugin'),
   navigateTo: getParentMethod('navigateTo'),
   register: (methods) => {
-    pluginViewMethods = {
+    viewPluginMethods = {
+      navigateTo: NOOP,
+      receiveValidation: NOOP,
       ...methods
     };
     connectionPromise.then(parent => parent.pluginRegistered());

@@ -38,9 +38,23 @@ describe('parent', () => {
       expect(child.init).toEqual(jasmine.any(Function));
       expect(child.navigateTo).toEqual(jasmine.any(Function));
       expect(child.receiveEvents).toEqual(jasmine.any(Function));
+      expect(child.receivePlugins).toEqual(jasmine.any(Function));
       expect(child.receiveSelectedEvents).toEqual(jasmine.any(Function));
       expect(child.receiveSession).toEqual(jasmine.any(Function));
-      expect(child.receivePlugins).toEqual(jasmine.any(Function));
+      expect(child.receiveValidation).toEqual(jasmine.any(Function));
+      done();
+    });
+  });
+
+  it('loads an iframe and provides noop APIs', (done) => {
+    bridge = createAndLoadIframe('optional.html');
+
+    expect(bridge.destroy).toEqual(jasmine.any(Function));
+    expect(bridge.promise).toEqual(jasmine.any(Promise));
+
+    bridge.promise.then((child) => {
+      expect(child.navigateTo).toEqual(jasmine.any(Function));
+      expect(child.receiveValidation).toEqual(jasmine.any(Function));
       done();
     });
   });
@@ -73,7 +87,7 @@ describe('parent', () => {
     bridge = createAndLoadIframe('connectionFailure.html');
 
     bridge.promise.then(() => {}, (err) => {
-      expect(err).toBe(ERROR_CODES.CONNECTION_TIMEOUT);
+      expect(err.toString()).toContain(ERROR_CODES.CONNECTION_TIMEOUT);
       jasmine.clock().uninstall();
       done();
     });
