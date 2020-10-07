@@ -73,7 +73,7 @@ describe('parent', () => {
     bridge = createAndLoadIframe('connectionFailure.html');
 
     bridge.promise.then(() => {}, (err) => {
-      expect(err).toBe(ERROR_CODES.CONNECTION_TIMEOUT);
+      expect(err.toString()).toContain(ERROR_CODES.CONNECTION_TIMEOUT);
       jasmine.clock().uninstall();
       done();
     });
