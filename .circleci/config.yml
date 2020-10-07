@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/airglow-build
+    working_directory: ~
     docker:
       - image: circleci/node:10.15.3
     steps: # a collection of executable commands
