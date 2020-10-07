@@ -7,12 +7,19 @@ jobs:
       - checkout
       - run: >
           sudo apt-get update
+          && echo "apt-get updated"
           && sudo apt-get install -y wget gnupg
-          && sudo wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+          && echo "installed wget gnupg"
+          && sudo wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          && echo "wget key and added"
           && sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+          && echo "echoed deb to sources google.list"
           && sudo apt-get update
+          && echo "apt-get updated"
           && sudo apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 --no-install-recommends
+          && echo "installed libs"
           && sudo rm -rf /var/lib/apt/lists/*
+          && echo "removed apt lists"
       - restore_cache: # special step to restore the dependency cache
           # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
           key: dependency-cache-{{ checksum "package.json" }}
