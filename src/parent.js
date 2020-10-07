@@ -65,7 +65,7 @@ export const loadIframe = (options) => {
     debug = false,
     deletePlugin,
     iframe,
-    navigateTo,
+    navigateTo = NOOP,
     pluginInitOptions,
     renderTimeoutDuration = RENDER_TIMEOUT_DURATION,
     uploadPlugin,
@@ -95,9 +95,10 @@ export const loadIframe = (options) => {
                 init: child.init,
                 navigateTo: child.navigateTo,
                 receiveEvents: child.receiveEvents,
+                receivePlugins: child.receivePlugins,
                 receiveSelectedEvents: child.receiveSelectedEvents,
                 receiveSession: child.receiveSession,
-                receivePlugins: child.receivePlugins
+                receiveValidation: child.receiveValidation
               });
             }).catch((error) => {
               clearTimeout(renderTimeoutId);

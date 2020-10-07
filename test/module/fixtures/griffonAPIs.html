@@ -7,6 +7,7 @@
     <script>
       pluginBridge.register({
         init: function(info) {},
+        navigateTo: function() {},
         receiveEvents: function() {
           console.log('receiveEvents');
           pluginBridge.annotateEvent()
@@ -18,7 +19,8 @@
           pluginBridge.uploadPlugin()
         },
         receiveSelectedEvents: function() {},
-        receiveSession: function() {}
+        receiveSession: function() {},
+        receiveValidation: function() {}
       });
     </script>
   </head>

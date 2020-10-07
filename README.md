@@ -78,6 +78,9 @@ window.pluginBridge.register({
   },
   receiveSession: (session) => {
     // session information including session annotations
+  },
+  receiveValidation: (results) => {
+    // validation results from the validation plugins
   }
 });
 ```
@@ -100,6 +103,17 @@ Currently, Project Griffon UI will send all events via this method on all regist
 ##### receiveSelectedEvents
 
 Project Griffon UI sends an array of event uuids selected from the result of a plugin calling `selectEvents` on the bridge.
+
+##### receiveValidation
+
+The parent (Project Griffon UI) calls receiveValidation when the validation plugins have been executed. The payload will contain an object of results each keyed by the namespace of the plugin. Each result will have the following payload:
+
+```
+{
+  "message": "All your base are belong to us",
+  "errors": ["uuid1", "uuid2"], // list of event uuids where a problem was discovered
+}
+``` 
 
 ## Scripts
 
