@@ -119,9 +119,9 @@ export const loadIframe = (options) => {
       }, renderTimeoutDuration);
     }, (error) => {
       if (error.code === ERR_CONNECTION_TIMEOUT) {
-        reject(ERROR_CODES.CONNECTION_TIMEOUT);
+        reject(new Error(`${ERROR_CODES.CONNECTION_TIMEOUT} for iframe.src: ${iframe.src}`));
       } else {
-        reject(error);
+        reject(new Error(`${error}: for iframe.src: ${iframe.src}`));
       }
     });
 
