@@ -28,8 +28,6 @@ let destroy;
 /**
  * Loads a plugin iframe and connects all the necessary APIs.
  * @param {Object} options
- * @param {string} options.iframe The iframe loading the plugin.
- * @param {Object} [options.pluginInitOptions={}] The options to be passed to the initial init()
  * call on the plugin view.
  * @param {Function} [options.annotateEvent] The function to call when a plugin view requests
  * that an event should be annotated. It should return a promise to be resolved with the
@@ -37,21 +35,27 @@ let destroy;
  * @param {Function} [options.annotateSession] The function to call when a plugin view requests
  * that a session should be annotated. It should return a promise to be resolved with the
  * result of the request.
+ * @param {number} [options.connectionTimeoutDuration=10000] The amount of time, in milliseconds,
+ * that must pass while attempting to establish communication with the iframe before rejecting
+ * the returned promise with a CONNECTION_TIMEOUT error code.
+ * @param {Function} [options.deletePlugin] The function to call when a view wants to delete a
+ * plugin.
+ * @param {string} options.iframe The iframe loading the plugin.
  * @param {Function} [options.navigateTo] The function to call when a plugin view wants to
  * navigate to another plugin view for deep linking
+ * @param {Object} [options.pluginInitOptions={}] The options to be passed to the initial init()
+ * @param {number} [options.renderTimeoutDuration=2000] The amount of time, in milliseconds,
+ * that must pass while attempting to render the iframe before rejecting the returned promise
+ * with a RENDER_TIMEOUT error code. This duration begins after communication with the iframe
+ * has been established.
  * @param {Function} [options.selectEvent] The function to call when a plugin view requests
  * that an event should be selected. This will call receiveSelectedEvents for other plugins.
  * This function should return a promise to be resolved with the result of the selection.
  * @param {Function} [options.sendCommand] The function to call when a plugin view wants to
  * send a command back to the Griffon SDK. The command is called with a { type, payload } where
  * type is the name of the command and payload is the execution instructions.
- * @param {number} [options.connectionTimeoutDuration=10000] The amount of time, in milliseconds,
- * that must pass while attempting to establish communication with the iframe before rejecting
- * the returned promise with a CONNECTION_TIMEOUT error code.
- * @param {number} [options.renderTimeoutDuration=2000] The amount of time, in milliseconds,
- * that must pass while attempting to render the iframe before rejecting the returned promise
- * with a RENDER_TIMEOUT error code. This duration begins after communication with the iframe
- * has been established.
+ * @param {Function} [options.uploadPlugin] The function to call when a view wants
+ * to create or update a plugin.
  */
 export const loadIframe = (options) => {
   const {
@@ -59,10 +63,12 @@ export const loadIframe = (options) => {
     annotateSession = NOOP,
     connectionTimeoutDuration = CONNECTION_TIMEOUT_DURATION,
     debug = false,
+    deletePlugin,
     iframe,
     navigateTo,
     pluginInitOptions,
     renderTimeoutDuration = RENDER_TIMEOUT_DURATION,
+    uploadPlugin,
     selectEvents = NOOP,
     sendCommand = NOOP
   } = options;
@@ -77,6 +83,7 @@ export const loadIframe = (options) => {
         annotateEvent,
         annotateSession,
         navigateTo,
+        deletePlugin,
         pluginRegistered: () => {
           connection.promise.then((child) => {
             child.init(pluginInitOptions).then(() => {
@@ -89,7 +96,8 @@ export const loadIframe = (options) => {
                 navigateTo: child.navigateTo,
                 receiveEvents: child.receiveEvents,
                 receiveSelectedEvents: child.receiveSelectedEvents,
-                receiveSession: child.receiveSession
+                receiveSession: child.receiveSession,
+                receivePlugins: child.receivePlugins
               });
             }).catch((error) => {
               clearTimeout(renderTimeoutId);
@@ -98,7 +106,8 @@ export const loadIframe = (options) => {
           });
         },
         selectEvents,
-        sendCommand
+        sendCommand,
+        uploadPlugin
       },
       debug
     });

@@ -28,11 +28,15 @@ Allows a plugin to annotate an event. Annotations are additional data to events 
 
 ##### annotateSession
 
-Allows a plugin to annotate a session
+Allows a plugin to annotate a session.
+
+##### deletePlugin
+
+Allows a plugin to delete a validation or view plugin that is owned by the user's organization. 
 
 ##### navigateTo
 
-Allows a plugin to navigate to another view for deep linking
+Allows a plugin to navigate to another view for deep linking.
 
 ##### selectEvents
 
@@ -48,6 +52,10 @@ Sends a command to the SDK via the Griffon server. The format should be:
 }
 ```
 where the payload is an object containing data for the SDK to process when running the command.
+
+##### uploadPlugin
+
+Allows a plugin to upload a validation or view plugin.
 
 
 #### Plugin Methods

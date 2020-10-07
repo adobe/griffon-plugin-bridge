@@ -42,13 +42,18 @@ const receiveSession = (...args) => {
   getPluginMethod('receiveSession')(...args);
 };
 
+const receivePlugins = (...args) => {
+  getPluginMethod('receivePlugins')(...args);
+};
+
 const connectionPromise = connectToParent({
   methods: {
     init,
     navigateTo,
     receiveEvents,
     receiveSelectedEvents,
-    receiveSession
+    receiveSession,
+    receivePlugins
   }
 }).promise;
 
@@ -64,6 +69,7 @@ const getParentMethod = methodName => (...args) =>
 const pluginBridge = {
   annotateEvent: getParentMethod('annotateEvent'),
   annotateSession: getParentMethod('annotateSession'),
+  deletePlugin: getParentMethod('deletePlugin'),
   navigateTo: getParentMethod('navigateTo'),
   register: (methods) => {
     pluginViewMethods = {
@@ -72,7 +78,8 @@ const pluginBridge = {
     connectionPromise.then(parent => parent.pluginRegistered());
   },
   selectEvents: getParentMethod('selectEvents'),
-  sendCommand:  getParentMethod('sendCommand')
+  sendCommand:  getParentMethod('sendCommand'),
+  uploadPlugin: getParentMethod('uploadPlugin')
 };
 
 const executeQueuedCall = call => Promise.resolve(pluginBridge[call.methodName](...call.args))

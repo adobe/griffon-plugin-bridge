@@ -40,6 +40,7 @@ describe('parent', () => {
       expect(child.receiveEvents).toEqual(jasmine.any(Function));
       expect(child.receiveSelectedEvents).toEqual(jasmine.any(Function));
       expect(child.receiveSession).toEqual(jasmine.any(Function));
+      expect(child.receivePlugins).toEqual(jasmine.any(Function));
       done();
     });
   });
@@ -94,34 +95,42 @@ describe('parent', () => {
   describe('parent APIs', () => {
     let annotateEvent;
     let annotateSession;
+    let deletePlugin;
     let navigateTo;
     let selectEvents;
     let sendCommand;
+    let uploadPlugin;
 
     beforeEach(() => {
       annotateEvent = jasmine.createSpy();
       annotateSession = jasmine.createSpy();
+      deletePlugin = jasmine.createSpy();
       navigateTo = jasmine.createSpy();
       selectEvents = jasmine.createSpy();
       sendCommand = jasmine.createSpy();
+      uploadPlugin = jasmine.createSpy();
     });
 
     it('proxies the parent APIs', (done) => {
       bridge = createAndLoadIframe('griffonAPIs.html', {
         annotateEvent,
         annotateSession,
+        deletePlugin,
         navigateTo,
         selectEvents,
-        sendCommand
+        sendCommand,
+        uploadPlugin
       });
 
       bridge.promise.then((child) => {
         child.receiveEvents().then(() => {
           expect(annotateEvent).toHaveBeenCalled();
           expect(annotateSession).toHaveBeenCalled();
+          expect(deletePlugin).toHaveBeenCalled();
           expect(navigateTo).toHaveBeenCalled();
           expect(selectEvents).toHaveBeenCalled();
           expect(sendCommand).toHaveBeenCalled();
+          expect(uploadPlugin).toHaveBeenCalled();
           done();
         });
       });
@@ -134,9 +143,11 @@ describe('parent', () => {
         child.receiveEvents().then(() => {
           expect(annotateEvent).not.toHaveBeenCalled();
           expect(annotateSession).not.toHaveBeenCalled();
+          expect(deletePlugin).not.toHaveBeenCalled();
           expect(navigateTo).not.toHaveBeenCalled();
           expect(selectEvents).not.toHaveBeenCalled();
           expect(sendCommand).not.toHaveBeenCalled();
+          expect(uploadPlugin).not.toHaveBeenCalled();
           done();
         });
       });
