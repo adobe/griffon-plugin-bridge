@@ -27,10 +27,13 @@ const serveFixtures = () => {
   http.createServer(childIframes).listen(9800);
 };
 
+process.env.CHROME_BIN = require('puppeteer').executablePath();
+
 module.exports = function (config) {
   serveFixtures();
 
   config.set({
+    browsers: ['ChromeHeadlessNoSandbox'],
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
         base: 'ChromeHeadless',
