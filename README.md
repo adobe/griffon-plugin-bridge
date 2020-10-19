@@ -32,7 +32,7 @@ Allows a plugin to annotate a session.
 
 ##### deletePlugin
 
-Allows a plugin to delete a validation or view plugin that is owned by the user's organization. 
+Allows a plugin to delete a validation or view plugin that is owned by the user's organization. The payload needs to be the uuid of a plugin. This operation is currently restricted to Adobe first-party plugins only.
 
 ##### navigateTo
 
@@ -55,8 +55,14 @@ where the payload is an object containing data for the SDK to process when runni
 
 ##### uploadPlugin
 
-Allows a plugin to upload a validation or view plugin.
-
+Allows a plugin to upload a validation or view plugin. The payload to upload a plugin needs to look like the following:
+```
+{
+  uuid: '1234567890', // optional
+  file: Blob
+}
+```
+If a uuid is not provided, then a new plugin is created. Otherwise, the plugin is updated.
 
 #### Plugin Methods
 
@@ -72,6 +78,9 @@ window.pluginBridge.register({
   },
   receiveEvents: (events) => {
     // array of session events
+  },
+  receivePlugins: (events) => {
+    // array of view plugins
   },
   receiveSelectedEvents: (events) => {
     // subset of session events
@@ -99,6 +108,10 @@ Currently, Project Griffon UI will send all events via this method on all regist
   * Upon initial load of the plugin
   * Any time a new event is received while the session with the client (Mobile SDK) is active
   * Any time an event is annotated by a plugin
+
+##### receivePlugins
+
+Project Griffon UI calls receivePlugins when the visibility of a view is changed or when a view is uploaded or deleted. The payload will contain an array of plugin object metadata.
 
 ##### receiveSelectedEvents
 
