@@ -53,9 +53,13 @@ describe('parent', () => {
     expect(bridge.promise).toEqual(jasmine.any(Promise));
 
     bridge.promise.then((child) => {
-      expect(child.navigateTo).toEqual(jasmine.any(Function));
-      expect(child.receiveValidation).toEqual(jasmine.any(Function));
-      done();
+      Promise.all([
+        child.navigateTo(),
+        child.receivePlugins(),
+        child.receiveValidation()
+      ]).then(() => {
+        done();
+      });
     });
   });
 
