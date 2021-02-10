@@ -119,12 +119,20 @@ Project Griffon UI sends an array of event uuids selected from the result of a p
 
 ##### receiveValidation
 
-The parent (Project Griffon UI) calls receiveValidation when the validation plugins have been executed. The payload will contain an object of results each keyed by the namespace of the plugin. Each result will have the following payload:
+The parent (Project Griffon UI) calls receiveValidation when the validation plugins have been executed. The payload will contain an object of results each keyed by the namespace of the plugin. Each result will have a payload similar to the following:
 
 ```
 {
-  "message": "All your base are belong to us",
-  "errors": ["uuid1", "uuid2"], // list of event uuids where a problem was discovered
+  "category": "Adobe Analytics"
+  "description": "Validates each analytics event has post-processed data."
+  "displayName": "Adobe Analytics Post-Processed Data"
+  "level": "off"
+  "namespace": "adobe-analytics-post-processed"
+  "results": {
+    "message": "Valid! All Analytics events have post-processed data!",
+    "events": [],
+    "result": "matched"
+  }
 }
 ``` 
 
