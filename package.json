@@ -8,10 +8,9 @@
   ],
   "scripts": {
     "prebuild": "rm -rf dist && mkdir dist && rm -rf lib",
-    "build:child": "webpack src/child.js -o dist/pluginBridge-child.min.js",
+    "build:child": "webpack src/child.js -o dist/pluginBridge.min.js",
     "build:libs": "babel src -d lib",
-    "build:loader": "webpack src/loader.js -o dist/pluginBridge.min.js",
-    "build": "npm run build:libs && npm run build:child && npm run build:loader",
+    "build": "npm run build:libs && npm run build:child",
     "lint": "eslint \"**/*.js\"",
     "test:ci": "NODE_ENV=test karma start --browsers ChromeHeadlessNoSandbox",
     "test": "NODE_ENV=test karma start --no-single-run --browsers Chrome"

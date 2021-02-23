@@ -64,13 +64,27 @@ const connectionPromise = connectToParent({
   }
 }).promise;
 
-const getParentMethod = methodName => (...args) =>
-  connectionPromise.then((parent) => {
-    if (parent[methodName]) {
-      return parent[methodName](...args);
-    }
+const callQueue = [];
 
-    throw new Error(`An error occured while calling ${methodName}. The method is unavailable`);
+const executeQueuedCall = call => Promise.resolve(pluginBridge[call.methodName](...call.args))
+  .then(call.resolve, call.reject);
+
+callQueue.push = executeQueuedCall;
+
+const getParentMethod = methodName => (...args) =>
+  new Promise((resolve, reject) => {
+    callQueue.push({
+      methodName: connectionPromise.then((parent) => {
+        if (parent[methodName]) {
+          return parent[methodName](...args);
+        }
+
+        throw new Error(`An error occured while calling ${methodName}. The method is unavailable`);
+      }),
+      args,
+      resolve,
+      reject
+    });
   });
 
 const pluginBridge = {
@@ -92,14 +106,8 @@ const pluginBridge = {
   uploadPlugin: getParentMethod('uploadPlugin')
 };
 
-const executeQueuedCall = call => Promise.resolve(pluginBridge[call.methodName](...call.args))
-  .then(call.resolve, call.reject);
-
-/* eslint-disable no-underscore-dangle */
-const callQueue = window.pluginBridge._callQueue;
+window.pluginBridge = pluginBridge;
 
 while (callQueue.length) {
   executeQueuedCall(callQueue.shift());
 }
-
-callQueue.push = executeQueuedCall;
