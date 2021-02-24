@@ -1,17 +1,11 @@
-# This is a basic workflow to help you get started with Actions
-
 name: npm-publish
-
-# Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: [ master ]
 
-  # Allows you to run this workflow manually from the Actions tab
+  # Allows to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   npm-publish:
     name: npm-publish
@@ -27,17 +21,14 @@ jobs:
       run: |
         npm ci
         npm run build
-    - name: Authenticate with Registry
-      run: |
-        echo "@adobe:registry=http://registry.npmjs.org/" > .npmrc
-        echo "registry=http://registry.npmjs.org/" >> .npmrc
-        echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
-        npm whoami        
-      env: # More info about the environment variables in the README
-        NPM_TOKEN: ${{ secrets.ADOBE_BOT_NPM_TOKEN }} # This will be shared with your repo as an org secret
-    - name: lerna publish
-      run: npx lerna publish from-package --yes
-      env: # More info about the environment variables in the README
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Leave this as is, it's automatically generated
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Leave this as is, it's automatically generated
-        NPM_TOKEN: ${{ secrets.ADOBE_BOT_NPM_TOKEN }} # This will be shared with your repo as an org secret
+    - name: Publish if version has been updated
+      uses: mkiki/npm-publish-action@c4315ef5790b7bcec2cbb75b34e37681a409d78d
+      with:
+        tag_name: "v%s"
+        tag_message: "v%s"
+        commit_pattern: "^Release (\\S+)"
+        workspace: "."
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NPM_TOKEN: ${{ secrets.ADOBE_BOT_NPM_TOKEN }}
