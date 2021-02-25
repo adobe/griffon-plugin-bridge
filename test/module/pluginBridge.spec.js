@@ -15,9 +15,12 @@ describe('parent', () => {
   let bridge;
 
   const createAndLoadIframe = (fixture, options) => {
+    console.log('createAndLoadIframe');
+    console.log(window.location.hostname);
     const iframe = document.createElement('iframe');
     iframe.src = `http://${window.location.hostname}:9800/${fixture}`;
     document.body.appendChild(iframe);
+    console.log('appended iframe');
 
     return loadIframe({ iframe, ...options });
   };
