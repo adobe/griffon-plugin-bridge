@@ -15,8 +15,6 @@ RUN \
 
 RUN \
   apk update && \
-  apk add --no-cache expect && \
-  apk add --no-cache openssh && \
   apk add --no-cache chromium@edge && \
   mkdir /build
 

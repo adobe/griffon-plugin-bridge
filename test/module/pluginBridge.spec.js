@@ -35,6 +35,7 @@ describe('parent', () => {
     expect(bridge.promise).toEqual(jasmine.any(Promise));
 
     bridge.promise.then((child) => {
+      console.log('promise fulfilled!');
       expect(child.init).toEqual(jasmine.any(Function));
       expect(child.navigateTo).toEqual(jasmine.any(Function));
       expect(child.receiveEvents).toEqual(jasmine.any(Function));
@@ -53,6 +54,7 @@ describe('parent', () => {
     expect(bridge.promise).toEqual(jasmine.any(Promise));
 
     bridge.promise.then((child) => {
+      console.log('promise fulfilled!');
       Promise.all([
         child.navigateTo(),
         child.receivePlugins(),
@@ -91,6 +93,7 @@ describe('parent', () => {
     bridge = createAndLoadIframe('connectionFailure.html');
 
     bridge.promise.then(() => {}, (err) => {
+      console.log('promise fulfilled!');
       expect(err.toString()).toContain(ERROR_CODES.CONNECTION_TIMEOUT);
       jasmine.clock().uninstall();
       done();
@@ -103,6 +106,7 @@ describe('parent', () => {
     bridge = createAndLoadIframe('registerPlugin.html');
 
     bridge.promise.then(() => {}, (err) => {
+      console.log('promise fulfilled!');
       expect(err).toBe(ERROR_CODES.DESTROYED);
       done();
     });
@@ -141,6 +145,7 @@ describe('parent', () => {
       });
 
       bridge.promise.then((child) => {
+        console.log('promise fulfilled!');
         child.receiveEvents().then(() => {
           expect(annotateEvent).toHaveBeenCalled();
           expect(annotateSession).toHaveBeenCalled();
@@ -158,6 +163,7 @@ describe('parent', () => {
       bridge = createAndLoadIframe('griffonAPIs.html');
 
       bridge.promise.then((child) => {
+        console.log('promise fulfilled!');
         child.receiveEvents().then(() => {
           expect(annotateEvent).not.toHaveBeenCalled();
           expect(annotateSession).not.toHaveBeenCalled();
