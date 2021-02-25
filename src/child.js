@@ -69,8 +69,6 @@ const callQueue = [];
 const executeQueuedCall = call => Promise.resolve(pluginBridge[call.methodName](...call.args))
   .then(call.resolve, call.reject);
 
-callQueue.push = executeQueuedCall;
-
 const getParentMethod = methodName => (...args) =>
   new Promise((resolve, reject) => {
     callQueue.push({
@@ -111,3 +109,5 @@ window.pluginBridge = pluginBridge;
 while (callQueue.length) {
   executeQueuedCall(callQueue.shift());
 }
+
+callQueue.push = executeQueuedCall;
