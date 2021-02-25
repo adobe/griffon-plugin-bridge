@@ -140,12 +140,12 @@ The parent (Project Griffon UI) calls receiveValidation when the validation plug
 
 To run tests, run the following command:
 ```
-npm run test
+npm run test:browsers
 ```
 
 To run a ci test:
 ```
-npm run test:ci
+npm run test
 ```
 
 To create a build, run the following command:

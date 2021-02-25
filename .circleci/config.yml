@@ -30,7 +30,7 @@ jobs:
           name: eslint
           command: npm run lint -- --format junit -o reports/junit/js-lint-results.xml
       - run:
-          command: npm run test:ci
+          command: npm run test
           environment:
             JUNIT_REPORT_NAME: test-results.xml
           when: always 

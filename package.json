@@ -12,8 +12,8 @@
     "build:libs": "babel src -d lib",
     "build": "npm run build:libs && npm run build:child",
     "lint": "eslint \"**/*.js\"",
-    "test:ci": "NODE_ENV=test karma start --browsers ChromeHeadlessNoSandbox",
-    "test": "NODE_ENV=test karma start --no-single-run --browsers Chrome"
+    "test": "NODE_ENV=test karma start --browsers ChromeHeadlessNoSandbox",
+    "test:browsers": "NODE_ENV=test karma start --no-single-run --browsers Chrome"
   },
   "author": "Adobe Systems",
   "license": "Apache-2.0",
