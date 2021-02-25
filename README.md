@@ -12,7 +12,7 @@ The communication layer consists three different pieces:
   
   The arguments, return value, and behavior of `loadIframe` can be found within the code documentation in [parent.js](src/parent.js).
 
-* **Child (dist/pluginBridge.min.js):** This is the portion of the communication layer that plugin views use by importing it directly:
+* **Child (dist/pluginBridge.min.js):** This is the portion of the communication layer that plugin views use by including the script:
 
 `<script src="https://ui.griffon.adobe.com/pluginBridge/pluginBridge.min.js"></script>`
 
