@@ -64,25 +64,13 @@ const connectionPromise = connectToParent({
   }
 }).promise;
 
-const callQueue = [];
-
-const executeQueuedCall = call => Promise.resolve(pluginBridge[call.methodName](...call.args))
-  .then(call.resolve, call.reject);
-
 const getParentMethod = methodName => (...args) =>
-  new Promise((resolve, reject) => {
-    callQueue.push({
-      methodName: connectionPromise.then((parent) => {
-        if (parent[methodName]) {
-          return parent[methodName](...args);
-        }
+  connectionPromise.then((parent) => {
+    if (parent[methodName]) {
+      return parent[methodName](...args);
+    }
 
-        throw new Error(`An error occured while calling ${methodName}. The method is unavailable`);
-      }),
-      args,
-      resolve,
-      reject
-    });
+    throw new Error(`An error occured while calling ${methodName}. The method is unavailable`);
   });
 
 const pluginBridge = {
@@ -105,9 +93,3 @@ const pluginBridge = {
 };
 
 window.pluginBridge = pluginBridge;
-
-while (callQueue.length) {
-  executeQueuedCall(callQueue.shift());
-}
-
-callQueue.push = executeQueuedCall;
