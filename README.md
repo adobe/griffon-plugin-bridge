@@ -9,7 +9,7 @@ The communication layer consists three different pieces:
 * **Parent (lib/parent.js):** This is the portion of the communication layer that Project Griffon UI uses by importing it directly:
 
   `import { loadIframe } from '@adobe/griffon-plugin-bridge';`
-  
+
   The arguments, return value, and behavior of `loadIframe` can be found within the code documentation in [parent.js](src/parent.js).
 
 * **Child (dist/pluginBridge.min.js):** This is the portion of the communication layer that plugin views use by including the script:
@@ -70,6 +70,9 @@ The bridge provides a plugin (child) the ability to implement the following APIs
 
 ```
 window.pluginBridge.register({
+  customize: (customization) => {
+    // object of plugin specific configuration values
+  },
   init: (settings) => {
     // do something
   },
@@ -97,6 +100,10 @@ window.pluginBridge.register({
 ##### init
 
 The parent (Project Griffon UI) calls init once the plugin is registered. Here, Project Griffon UI will pass in any applicable configuration settings.
+
+##### customize
+
+The parent calls customize with values that change how the plugin itself should behave. For example, a `theme` value of `light` or `dark` will be provided to accommodate dark mode.
 
 ##### navigateTo
 
@@ -134,7 +141,7 @@ The parent (Project Griffon UI) calls receiveValidation when the validation plug
     "result": "matched"
   }
 }
-``` 
+```
 
 ## Scripts
 
