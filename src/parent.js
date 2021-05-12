@@ -93,6 +93,7 @@ export const loadIframe = (options) => {
                 // the sandbox tool's benefit so a developer testing their plugin view can
                 // initialize multiple times with different info.
                 init: child.init,
+                customize: child.customize,
                 navigateTo: child.navigateTo,
                 receiveEvents: child.receiveEvents,
                 receivePlugins: child.receivePlugins,

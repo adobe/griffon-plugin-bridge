@@ -24,6 +24,10 @@ const getPluginMethod = (name) => {
   return method.bind(viewPluginMethods);
 };
 
+const customize = (...args) => {
+  getPluginMethod('customize')(...args);
+};
+
 const init = (...args) => {
   getPluginMethod('init')(...args);
 };
@@ -54,6 +58,7 @@ const receiveValidation = (...args) => {
 
 const connectionPromise = connectToParent({
   methods: {
+    customize,
     init,
     navigateTo,
     receiveEvents,
