@@ -71,7 +71,7 @@ The bridge provides a plugin (child) the ability to implement the following APIs
 ```
 window.pluginBridge.register({
   customize: (customization) => {
-    // object of plugin specific configuration values
+    // object of plugin specific configuration values. (object defined below)
   },
   init: (settings) => {
     // do something
@@ -103,7 +103,17 @@ The parent (Project Griffon UI) calls init once the plugin is registered. Here, 
 
 ##### customize
 
-The parent calls customize with values that change how the plugin itself should behave. For example, a `theme` value of `light` or `dark` will be provided to accommodate dark mode.
+The parent calls customize with values that change how the plugin itself should behave.
+
+Example Payload
+```
+{ theme: 'light', locale: 'en-US', showTimeline: false }
+```
+
+**Supported Values**
+- *theme*: (light/dark) specifies the theme the parent's UI is using
+- *locale*: (en-US, etc) specifies which localization to use in the UI
+- *showTimeline*: (true/false) many Griffon Plugins show a timeline at the bottom by default. Setting this to `false` will hide that timeline.
 
 ##### navigateTo
 
