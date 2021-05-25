@@ -98,6 +98,7 @@ export const loadIframe = (options) => {
                 receivePlugins: child.receivePlugins,
                 receiveSelectedEvents: child.receiveSelectedEvents,
                 receiveSession: child.receiveSession,
+                receiveSettings: child.receiveSettings,
                 receiveValidation: child.receiveValidation
               });
             }).catch((error) => {

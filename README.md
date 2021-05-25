@@ -9,7 +9,7 @@ The communication layer consists three different pieces:
 * **Parent (lib/parent.js):** This is the portion of the communication layer that Project Griffon UI uses by importing it directly:
 
   `import { loadIframe } from '@adobe/griffon-plugin-bridge';`
-  
+
   The arguments, return value, and behavior of `loadIframe` can be found within the code documentation in [parent.js](src/parent.js).
 
 * **Child (dist/pluginBridge.min.js):** This is the portion of the communication layer that plugin views use by including the script:
@@ -70,7 +70,7 @@ The bridge provides a plugin (child) the ability to implement the following APIs
 
 ```
 window.pluginBridge.register({
-  init: (settings) => {
+  init: (configuration) => {
     // do something
   },
   navigateTo: (path) => {
@@ -88,6 +88,9 @@ window.pluginBridge.register({
   receiveSession: (session) => {
     // session information including session annotations
   },
+  receiveSettings: (settings) => {
+    // new settings
+  },
   receiveValidation: (results) => {
     // validation results from the validation plugins
   }
@@ -97,6 +100,49 @@ window.pluginBridge.register({
 ##### init
 
 The parent (Project Griffon UI) calls init once the plugin is registered. Here, Project Griffon UI will pass in any applicable configuration settings.
+
+Example Payload
+```
+{
+  imsAccessToken: 'LongEncodedTokenGoesHere',
+  imsOrg: 'testOrg@AdobeOrg',
+  environment: 'prod',
+  settings: {
+    global: {
+      theme: 'light',
+      locale: 'en-US'
+    }
+  }
+```
+
+**Configiration Values**
+- *imsAccessToken*: token string used to make calls to Adobe services
+- *imsOrg*: string that identifies the user's active org id
+- *environment*: environment that the plugin is running against. Possible values are  `local`/`dev`/`qa`/`stage`/`prod`
+- *settings*: object contain the following settings. Settings can be updated using `receiveSettings`.
+
+**Settings**
+
+Settings determine how the plugin should look and feel. These settings are scoped to a namespace. The `global` namespace contains the following:
+
+- *theme*: (light/dark) specifies the theme the parent's UI is using
+- *locale*: (en-US, etc) specifies which localization to use in the UI
+
+You may also provide plugin specific settings using your plugins specific namespace.
+
+##### receiveSettings
+
+Passes a new set of settings data. The structure matches the `settings` field from the `init` command above.
+
+Example Payload
+```
+{ global: { theme: 'light', locale: 'en-US' }, 'aep-places': { defaultZoom: 7 } }
+```
+
+**Supported Values**
+- *theme*: (light/dark) specifies the theme the parent's UI is using
+- *locale*: (en-US, etc) specifies which localization to use in the UI
+- *showTimeline*: (true/false) many Griffon Plugins show a timeline at the bottom by default. Setting this to `false` will hide that timeline.
 
 ##### navigateTo
 
@@ -134,7 +180,7 @@ The parent (Project Griffon UI) calls receiveValidation when the validation plug
     "result": "matched"
   }
 }
-``` 
+```
 
 ## Scripts
 

@@ -48,6 +48,10 @@ const receiveSession = (...args) => {
   getPluginMethod('receiveSession')(...args);
 };
 
+const receiveSettings = (...args) => {
+  getPluginMethod('receiveSettings')(...args);
+};
+
 const receiveValidation = (...args) => {
   getPluginMethod('receiveValidation')(...args);
 };
@@ -57,9 +61,10 @@ const connectionPromise = connectToParent({
     init,
     navigateTo,
     receiveEvents,
+    receivePlugins,
     receiveSelectedEvents,
     receiveSession,
-    receivePlugins,
+    receiveSettings,
     receiveValidation
   }
 }).promise;

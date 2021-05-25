@@ -41,6 +41,7 @@ describe('parent', () => {
       expect(child.receivePlugins).toEqual(jasmine.any(Function));
       expect(child.receiveSelectedEvents).toEqual(jasmine.any(Function));
       expect(child.receiveSession).toEqual(jasmine.any(Function));
+      expect(child.receiveSettings).toEqual(jasmine.any(Function));
       expect(child.receiveValidation).toEqual(jasmine.any(Function));
       done();
     });
