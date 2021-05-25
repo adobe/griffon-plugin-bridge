@@ -108,22 +108,27 @@ Example Payload
   imsOrg: 'testOrg@AdobeOrg',
   environment: 'prod',
   settings: {
-    theme: 'light',
-    locale: 'en-US',
-    showTimeline: false
+    global: {
+      theme: 'light',
+      locale: 'en-US'
+    }
   }
 ```
 
-**Supported Settings**
+**Configiration Values**
 - *imsAccessToken*: token string used to make calls to Adobe services
 - *imsOrg*: string that identifies the user's active org id
 - *environment*: environment that the plugin is running against. Possible values are  `local`/`dev`/`qa`/`stage`/`prod`
 - *settings*: object contain the following settings. Settings can be updated using `receiveSettings`.
 
-**Supported Settings**
+**Settings**
+
+Settings determine how the plugin should look and feel. These settings are scoped to a namespace. The `global` namespace contains the following:
+
 - *theme*: (light/dark) specifies the theme the parent's UI is using
 - *locale*: (en-US, etc) specifies which localization to use in the UI
-- *showTimeline*: (true/false) many Griffon Plugins show a timeline at the bottom by default. Setting this to `false` will hide that timeline.
+
+You may also provide plugin specific settings using your plugins specific namespace.
 
 ##### receiveSettings
 
@@ -131,7 +136,7 @@ Passes a new set of settings data. The structure matches the `settings` field fr
 
 Example Payload
 ```
-{ theme: 'light', locale: 'en-US', showTimeline: false }
+{ global: { theme: 'light', locale: 'en-US' }, 'aep-places': { defaultZoom: 7 } }
 ```
 
 **Supported Values**
