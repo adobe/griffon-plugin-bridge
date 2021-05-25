@@ -70,10 +70,7 @@ The bridge provides a plugin (child) the ability to implement the following APIs
 
 ```
 window.pluginBridge.register({
-  customize: (customization) => {
-    // object of plugin specific configuration values. (object defined below)
-  },
-  init: (settings) => {
+  init: (configuration) => {
     // do something
   },
   navigateTo: (path) => {
@@ -90,6 +87,9 @@ window.pluginBridge.register({
   },
   receiveSession: (session) => {
     // session information including session annotations
+  },
+  receiveSettings: (settings) => {
+    // new settings
   },
   receiveValidation: (results) => {
     // validation results from the validation plugins
