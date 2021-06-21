@@ -87,6 +87,7 @@ const pluginBridge = {
     viewPluginMethods = {
       navigateTo: NOOP,
       receivePlugins: NOOP,
+      receiveSettings: NOOP,
       receiveValidation: NOOP,
       ...methods
     };
