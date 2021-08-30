@@ -94,6 +94,7 @@ export const loadIframe = (options) => {
                 // initialize multiple times with different info.
                 init: child.init,
                 navigateTo: child.navigateTo,
+                receiveConnections: child.receiveConnections,
                 receiveEvents: child.receiveEvents,
                 receivePlugins: child.receivePlugins,
                 receiveSelectedEvents: child.receiveSelectedEvents,

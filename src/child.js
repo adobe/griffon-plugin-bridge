@@ -32,6 +32,10 @@ const navigateTo = (...args) => {
   getPluginMethod('navigateTo')(...args);
 };
 
+const receiveConnections = (...args) => {
+  getPluginMethod('receiveConnections')(...args);
+};
+
 const receiveEvents = (...args) => {
   getPluginMethod('receiveEvents')(...args);
 };
@@ -60,6 +64,7 @@ const connectionPromise = connectToParent({
   methods: {
     init,
     navigateTo,
+    receiveConnections,
     receiveEvents,
     receivePlugins,
     receiveSelectedEvents,

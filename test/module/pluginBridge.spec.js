@@ -37,6 +37,7 @@ describe('parent', () => {
     bridge.promise.then((child) => {
       expect(child.init).toEqual(jasmine.any(Function));
       expect(child.navigateTo).toEqual(jasmine.any(Function));
+      expect(child.receiveConnections).toEqual(jasmine.any(Function));
       expect(child.receiveEvents).toEqual(jasmine.any(Function));
       expect(child.receivePlugins).toEqual(jasmine.any(Function));
       expect(child.receiveSelectedEvents).toEqual(jasmine.any(Function));
