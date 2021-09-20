@@ -87,10 +87,12 @@ const pluginBridge = {
   annotateEvent: getParentMethod('annotateEvent'),
   annotateSession: getParentMethod('annotateSession'),
   deletePlugin: getParentMethod('deletePlugin'),
+  flushConnection: getParentMethod('flushConnection'),
   navigateTo: getParentMethod('navigateTo'),
   register: (methods) => {
     viewPluginMethods = {
       navigateTo: NOOP,
+      receiveConnections: NOOP,
       receivePlugins: NOOP,
       receiveSettings: NOOP,
       receiveValidation: NOOP,
