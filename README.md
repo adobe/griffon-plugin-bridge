@@ -159,7 +159,9 @@ Project Griffon UI sends an array of connections. A connection will look like:
 {
   namespace, // the namespace of the connector
   context, // object containing parameters needed to run the connector
-  query: { isLoaded, loading, error }, // defines the state of the remote api query
+  loaded, // has the connection data finished loading
+  loading, // is the connection currently loading
+  error, // error object resulting from the query (if applicable)
   data // the resulting data from the api call
 }
 ```
