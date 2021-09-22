@@ -32,6 +32,10 @@ const navigateTo = (...args) => {
   getPluginMethod('navigateTo')(...args);
 };
 
+const receiveConnections = (...args) => {
+  getPluginMethod('receiveConnections')(...args);
+};
+
 const receiveEvents = (...args) => {
   getPluginMethod('receiveEvents')(...args);
 };
@@ -60,6 +64,7 @@ const connectionPromise = connectToParent({
   methods: {
     init,
     navigateTo,
+    receiveConnections,
     receiveEvents,
     receivePlugins,
     receiveSelectedEvents,
@@ -82,10 +87,12 @@ const pluginBridge = {
   annotateEvent: getParentMethod('annotateEvent'),
   annotateSession: getParentMethod('annotateSession'),
   deletePlugin: getParentMethod('deletePlugin'),
+  flushConnection: getParentMethod('flushConnection'),
   navigateTo: getParentMethod('navigateTo'),
   register: (methods) => {
     viewPluginMethods = {
       navigateTo: NOOP,
+      receiveConnections: NOOP,
       receivePlugins: NOOP,
       receiveSettings: NOOP,
       receiveValidation: NOOP,

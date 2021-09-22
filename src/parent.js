@@ -40,6 +40,8 @@ let destroy;
  * the returned promise with a CONNECTION_TIMEOUT error code.
  * @param {Function} [options.deletePlugin] The function to call when a view wants to delete a
  * plugin.
+ * @param {Function} [options.flushConnection] The function to call when a view needs to reload
+ * connection data.
  * @param {string} options.iframe The iframe loading the plugin.
  * @param {Function} [options.navigateTo] The function to call when a plugin view wants to
  * navigate to another plugin view for deep linking
@@ -64,6 +66,7 @@ export const loadIframe = (options) => {
     connectionTimeoutDuration = CONNECTION_TIMEOUT_DURATION,
     debug = false,
     deletePlugin,
+    flushConnection = NOOP,
     iframe,
     navigateTo = NOOP,
     pluginInitOptions,
@@ -84,6 +87,7 @@ export const loadIframe = (options) => {
         annotateSession,
         navigateTo,
         deletePlugin,
+        flushConnection,
         pluginRegistered: () => {
           connection.promise.then((child) => {
             child.init(pluginInitOptions).then(() => {
@@ -94,6 +98,7 @@ export const loadIframe = (options) => {
                 // initialize multiple times with different info.
                 init: child.init,
                 navigateTo: child.navigateTo,
+                receiveConnections: child.receiveConnections,
                 receiveEvents: child.receiveEvents,
                 receivePlugins: child.receivePlugins,
                 receiveSelectedEvents: child.receiveSelectedEvents,

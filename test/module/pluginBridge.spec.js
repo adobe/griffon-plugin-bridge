@@ -37,6 +37,7 @@ describe('parent', () => {
     bridge.promise.then((child) => {
       expect(child.init).toEqual(jasmine.any(Function));
       expect(child.navigateTo).toEqual(jasmine.any(Function));
+      expect(child.receiveConnections).toEqual(jasmine.any(Function));
       expect(child.receiveEvents).toEqual(jasmine.any(Function));
       expect(child.receivePlugins).toEqual(jasmine.any(Function));
       expect(child.receiveSelectedEvents).toEqual(jasmine.any(Function));
@@ -115,6 +116,7 @@ describe('parent', () => {
     let annotateEvent;
     let annotateSession;
     let deletePlugin;
+    let flushConnection;
     let navigateTo;
     let selectEvents;
     let sendCommand;
@@ -124,6 +126,7 @@ describe('parent', () => {
       annotateEvent = jasmine.createSpy();
       annotateSession = jasmine.createSpy();
       deletePlugin = jasmine.createSpy();
+      flushConnection = jasmine.createSpy();
       navigateTo = jasmine.createSpy();
       selectEvents = jasmine.createSpy();
       sendCommand = jasmine.createSpy();
@@ -135,6 +138,7 @@ describe('parent', () => {
         annotateEvent,
         annotateSession,
         deletePlugin,
+        flushConnection,
         navigateTo,
         selectEvents,
         sendCommand,
@@ -146,6 +150,7 @@ describe('parent', () => {
           expect(annotateEvent).toHaveBeenCalled();
           expect(annotateSession).toHaveBeenCalled();
           expect(deletePlugin).toHaveBeenCalled();
+          expect(flushConnection).toHaveBeenCalled();
           expect(navigateTo).toHaveBeenCalled();
           expect(selectEvents).toHaveBeenCalled();
           expect(sendCommand).toHaveBeenCalled();
@@ -163,6 +168,7 @@ describe('parent', () => {
           expect(annotateEvent).not.toHaveBeenCalled();
           expect(annotateSession).not.toHaveBeenCalled();
           expect(deletePlugin).not.toHaveBeenCalled();
+          expect(flushConnection).not.toHaveBeenCalled();
           expect(navigateTo).not.toHaveBeenCalled();
           expect(selectEvents).not.toHaveBeenCalled();
           expect(sendCommand).not.toHaveBeenCalled();

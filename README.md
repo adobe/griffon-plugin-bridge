@@ -30,6 +30,10 @@ Allows a plugin to annotate an event. Annotations are additional data to events 
 
 Allows a plugin to annotate a session.
 
+##### flushConnection
+
+Allows a plugin to rerun a connector. Flush connection takes a `namespace` and  `context` parameter. The exact connection that fully matches both the `namespace` and `context` will be cleared, causing the downstream Connector to reload the data.
+
 ##### deletePlugin
 
 Allows a plugin to delete a validation or view plugin that is owned by the user's organization. The payload needs to be the uuid of a plugin. This operation is currently restricted to Adobe first-party plugins only.
@@ -147,6 +151,20 @@ Example Payload
 ##### navigateTo
 
 The parent (Project Griffon UI) calls navigateTo whenever the URL is updated. The intent here is to provide deep linking capabilities as well as an opportunity for plugins to be good citizens and limit resources when not visible.
+
+##### receiveConnections
+
+Project Griffon UI sends an array of connections. A connection will look like:
+```
+{
+  namespace, // the namespace of the connector
+  context, // object containing parameters needed to run the connector
+  loaded, // has the connection data finished loading
+  loading, // is the connection currently loading
+  error, // error object resulting from the query (if applicable)
+  data // the resulting data from the api call
+}
+```
 
 ##### receiveEvents
 
