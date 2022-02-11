@@ -35,7 +35,7 @@
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.23.4",
     "jasmine": "^3.7.0",
-    "karma": "^4.4.1",
+    "karma": "^6.3.14",
     "karma-chrome-launcher": "^3.1.0",
     "karma-coverage": "^1.1.2",
     "karma-jasmine": "^2.0.1",
