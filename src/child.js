@@ -102,6 +102,7 @@ const pluginBridge = {
   },
   selectEvents: getParentMethod('selectEvents'),
   sendCommand:  getParentMethod('sendCommand'),
+  trackEvent: getParentMethod('trackEvent'),
   uploadPlugin: getParentMethod('uploadPlugin')
 };
 

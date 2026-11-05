@@ -120,6 +120,7 @@ describe('parent', () => {
     let navigateTo;
     let selectEvents;
     let sendCommand;
+    let trackEvent;
     let uploadPlugin;
 
     beforeEach(() => {
@@ -130,6 +131,7 @@ describe('parent', () => {
       navigateTo = jasmine.createSpy();
       selectEvents = jasmine.createSpy();
       sendCommand = jasmine.createSpy();
+      trackEvent = jasmine.createSpy();
       uploadPlugin = jasmine.createSpy();
     });
 
@@ -142,6 +144,7 @@ describe('parent', () => {
         navigateTo,
         selectEvents,
         sendCommand,
+        trackEvent,
         uploadPlugin
       });
 
@@ -154,6 +157,13 @@ describe('parent', () => {
           expect(navigateTo).toHaveBeenCalled();
           expect(selectEvents).toHaveBeenCalled();
           expect(sendCommand).toHaveBeenCalled();
+          expect(trackEvent).toHaveBeenCalledWith({
+            action: 'select',
+            element: 'Test element',
+            feature: 'test-plugin',
+            type: 'list-item',
+            widget: { name: 'test-widget', type: 'dialog' }
+          });
           expect(uploadPlugin).toHaveBeenCalled();
           done();
         });
@@ -172,6 +182,7 @@ describe('parent', () => {
           expect(navigateTo).not.toHaveBeenCalled();
           expect(selectEvents).not.toHaveBeenCalled();
           expect(sendCommand).not.toHaveBeenCalled();
+          expect(trackEvent).not.toHaveBeenCalled();
           expect(uploadPlugin).not.toHaveBeenCalled();
           done();
         });

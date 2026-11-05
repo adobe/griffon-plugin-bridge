@@ -16,6 +16,13 @@
           pluginBridge.navigateTo()
           pluginBridge.selectEvents()
           pluginBridge.sendCommand()
+          pluginBridge.trackEvent({
+            action: 'select',
+            element: 'Test element',
+            feature: 'test-plugin',
+            type: 'list-item',
+            widget: { name: 'test-widget', type: 'dialog' }
+          })
           pluginBridge.uploadPlugin()
         },
         receiveSelectedEvents: function() {},
