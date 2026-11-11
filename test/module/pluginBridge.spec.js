@@ -16,14 +16,26 @@ const NOOP = () => {};
 
 // The griffonAPIs fixture reports back how its trackEvent call settled, so a
 // spec can assert that the child's promise actually resolved rather than the
-// call failing silently.
-const waitForTrackEventOutcome = () => new Promise((resolve) => {
+// call failing silently. Only messages from the given iframe count, so a
+// delayed outcome from another spec's fixture cannot satisfy this assertion.
+const waitForTrackEventOutcome = iframe => new Promise((resolve) => {
+  let timeoutId;
   const onMessage = (event) => {
-    if (event.data && event.data.type === 'trackEventOutcome') {
+    if (event.source === iframe.contentWindow
+      && event.data
+      && event.data.type === 'trackEventOutcome') {
       window.removeEventListener('message', onMessage);
+      clearTimeout(timeoutId);
       resolve(event.data.outcome);
     }
   };
+  // If the message never arrives (broken fixture or lost connection), drop
+  // the listener and let the assertion fail with a clear value instead of
+  // waiting for jasmine's spec timeout.
+  timeoutId = setTimeout(() => {
+    window.removeEventListener('message', onMessage);
+    resolve('no-outcome');
+  }, 4000);
   window.addEventListener('message', onMessage);
 });
 
@@ -35,7 +47,9 @@ describe('parent', () => {
     iframe.src = `http://${window.location.hostname}:9800/${fixture}`;
     document.body.appendChild(iframe);
 
-    return loadIframe({ iframe, ...options });
+    const result = loadIframe({ iframe, ...options });
+    result.iframe = iframe;
+    return result;
   };
 
   afterEach(() => {
@@ -187,8 +201,8 @@ describe('parent', () => {
     });
 
     it('does not fail if child calls NOOP parent methods', (done) => {
-      const outcome = waitForTrackEventOutcome();
       bridge = createAndLoadIframe('griffonAPIs.html');
+      const outcome = waitForTrackEventOutcome(bridge.iframe);
 
       bridge.promise.then((child) => {
         child.receiveEvents().then(() => {
@@ -213,11 +227,11 @@ describe('parent', () => {
 
 describe('older host without a trackEvent method', () => {
   it('resolves trackEvent when the host does not advertise it', (done) => {
-    const outcome = waitForTrackEventOutcome();
-
     const iframe = document.createElement('iframe');
     iframe.src = `http://${window.location.hostname}:9800/griffonAPIs.html`;
     document.body.appendChild(iframe);
+
+    const outcome = waitForTrackEventOutcome(iframe);
 
     // The method set a pre-0.5.0 host advertises: everything except trackEvent.
     const connection = connectToChild({
