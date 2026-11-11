@@ -226,6 +226,14 @@ describe('parent', () => {
 });
 
 describe('older host without a trackEvent method', () => {
+  let connection;
+
+  afterEach(() => {
+    if (connection) {
+      connection.destroy();
+    }
+  });
+
   it('resolves trackEvent when the host does not advertise it', (done) => {
     const iframe = document.createElement('iframe');
     iframe.src = `http://${window.location.hostname}:9800/griffonAPIs.html`;
@@ -234,7 +242,7 @@ describe('older host without a trackEvent method', () => {
     const outcome = waitForTrackEventOutcome(iframe);
 
     // The method set a pre-0.5.0 host advertises: everything except trackEvent.
-    const connection = connectToChild({
+    connection = connectToChild({
       iframe,
       methods: {
         annotateEvent: NOOP,
@@ -257,7 +265,6 @@ describe('older host without a trackEvent method', () => {
 
     outcome.then((result) => {
       expect(result).toBe('fulfilled');
-      connection.destroy();
       done();
     });
   });
