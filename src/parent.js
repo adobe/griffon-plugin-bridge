@@ -56,6 +56,9 @@ let destroy;
  * @param {Function} [options.sendCommand] The function to call when a plugin view wants to
  * send a command back to the Griffon SDK. The command is called with a { type, payload } where
  * type is the name of the command and payload is the execution instructions.
+ * @param {Function} [options.trackEvent] The function to call when a plugin view wants to
+ * report a product usage event. It is called with the usage event object provided by the
+ * plugin and should return a promise to be resolved with the result of the request.
  * @param {Function} [options.uploadPlugin] The function to call when a view wants
  * to create or update a plugin.
  */
@@ -73,7 +76,8 @@ export const loadIframe = (options) => {
     renderTimeoutDuration = RENDER_TIMEOUT_DURATION,
     uploadPlugin,
     selectEvents = NOOP,
-    sendCommand = NOOP
+    sendCommand = NOOP,
+    trackEvent = NOOP
   } = options;
 
   const loadPromise = new Promise((resolve, reject) => {
@@ -114,6 +118,7 @@ export const loadIframe = (options) => {
         },
         selectEvents,
         sendCommand,
+        trackEvent,
         uploadPlugin
       },
       debug

@@ -57,6 +57,10 @@ Sends a command to the SDK via the Griffon server. The format should be:
 ```
 where the payload is an object containing data for the SDK to process when running the command.
 
+##### trackEvent
+
+Allows a plugin to report a product usage event to the Griffon UI. The payload is the usage event object provided by the plugin and is forwarded to the Griffon UI unchanged. On a Griffon UI that does not provide a `trackEvent` handler, the call resolves without an error, so plugins can always call it without checking the host version.
+
 ##### uploadPlugin
 
 Allows a plugin to upload a validation or view plugin. The payload to upload a plugin needs to look like the following:
