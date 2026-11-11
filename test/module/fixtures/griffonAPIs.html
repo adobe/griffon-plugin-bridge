@@ -22,6 +22,10 @@
             feature: 'test-plugin',
             type: 'list-item',
             widget: { name: 'test-widget', type: 'dialog' }
+          }).then(function() {
+            window.parent.postMessage({ type: 'trackEventOutcome', outcome: 'fulfilled' }, '*')
+          }, function() {
+            window.parent.postMessage({ type: 'trackEventOutcome', outcome: 'rejected' }, '*')
           })
           pluginBridge.uploadPlugin()
         },

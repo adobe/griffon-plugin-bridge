@@ -103,7 +103,7 @@ const pluginBridge = {
   selectEvents: getParentMethod('selectEvents'),
   sendCommand:  getParentMethod('sendCommand'),
   trackEvent: (...args) => connectionPromise.then(parent => (
-    parent.trackEvent ? parent.trackEvent(...args) : NOOP()
+    parent.trackEvent ? parent.trackEvent(...args) : undefined
   )),
   uploadPlugin: getParentMethod('uploadPlugin')
 };

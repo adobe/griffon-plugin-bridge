@@ -9,7 +9,23 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
+import connectToChild from 'penpal/lib/connectToChild';
 import { loadIframe, ERROR_CODES } from '../../src/parent';
+
+const NOOP = () => {};
+
+// The griffonAPIs fixture reports back how its trackEvent call settled, so a
+// spec can assert that the child's promise actually resolved rather than the
+// call failing silently.
+const waitForTrackEventOutcome = () => new Promise((resolve) => {
+  const onMessage = (event) => {
+    if (event.data && event.data.type === 'trackEventOutcome') {
+      window.removeEventListener('message', onMessage);
+      resolve(event.data.outcome);
+    }
+  };
+  window.addEventListener('message', onMessage);
+});
 
 describe('parent', () => {
   let bridge;
@@ -171,22 +187,64 @@ describe('parent', () => {
     });
 
     it('does not fail if child calls NOOP parent methods', (done) => {
+      const outcome = waitForTrackEventOutcome();
       bridge = createAndLoadIframe('griffonAPIs.html');
 
       bridge.promise.then((child) => {
         child.receiveEvents().then(() => {
-          expect(annotateEvent).not.toHaveBeenCalled();
-          expect(annotateSession).not.toHaveBeenCalled();
-          expect(deletePlugin).not.toHaveBeenCalled();
-          expect(flushConnection).not.toHaveBeenCalled();
-          expect(navigateTo).not.toHaveBeenCalled();
-          expect(selectEvents).not.toHaveBeenCalled();
-          expect(sendCommand).not.toHaveBeenCalled();
-          expect(trackEvent).not.toHaveBeenCalled();
-          expect(uploadPlugin).not.toHaveBeenCalled();
-          done();
+          outcome.then((result) => {
+            expect(annotateEvent).not.toHaveBeenCalled();
+            expect(annotateSession).not.toHaveBeenCalled();
+            expect(deletePlugin).not.toHaveBeenCalled();
+            expect(flushConnection).not.toHaveBeenCalled();
+            expect(navigateTo).not.toHaveBeenCalled();
+            expect(selectEvents).not.toHaveBeenCalled();
+            expect(sendCommand).not.toHaveBeenCalled();
+            expect(trackEvent).not.toHaveBeenCalled();
+            expect(uploadPlugin).not.toHaveBeenCalled();
+            expect(result).toBe('fulfilled');
+            done();
+          });
         });
       });
+    });
+  });
+});
+
+describe('older host without a trackEvent method', () => {
+  it('resolves trackEvent when the host does not advertise it', (done) => {
+    const outcome = waitForTrackEventOutcome();
+
+    const iframe = document.createElement('iframe');
+    iframe.src = `http://${window.location.hostname}:9800/griffonAPIs.html`;
+    document.body.appendChild(iframe);
+
+    // The method set a pre-0.5.0 host advertises: everything except trackEvent.
+    const connection = connectToChild({
+      iframe,
+      methods: {
+        annotateEvent: NOOP,
+        annotateSession: NOOP,
+        deletePlugin: NOOP,
+        flushConnection: NOOP,
+        navigateTo: NOOP,
+        pluginRegistered: () => {
+          connection.promise.then((child) => {
+            child.init({}).then(() => {
+              child.receiveEvents();
+            });
+          });
+        },
+        selectEvents: NOOP,
+        sendCommand: NOOP,
+        uploadPlugin: NOOP
+      }
+    });
+
+    outcome.then((result) => {
+      expect(result).toBe('fulfilled');
+      connection.destroy();
+      done();
     });
   });
 });
