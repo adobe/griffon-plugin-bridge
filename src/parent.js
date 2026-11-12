@@ -58,7 +58,9 @@ let destroy;
  * type is the name of the command and payload is the execution instructions.
  * @param {Function} [options.trackEvent] The function to call when a plugin view wants to
  * report a product usage event. It is called with the usage event object provided by the
- * plugin and should return a promise to be resolved with the result of the request.
+ * plugin, which is untrusted input from a cross-origin plugin, and should return a promise
+ * to be resolved with the result of the request. Hosts should validate or allow-list the
+ * fields (and cap the payload size) before forwarding the object to their analytics.
  * @param {Function} [options.uploadPlugin] The function to call when a view wants
  * to create or update a plugin.
  */
