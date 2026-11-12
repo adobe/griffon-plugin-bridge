@@ -59,7 +59,7 @@ where the payload is an object containing data for the SDK to process when runni
 
 ##### trackEvent
 
-Allows a plugin to report a product usage event to the Griffon UI. The payload is the usage event object provided by the plugin and is forwarded to the Griffon UI unchanged. On a Griffon UI that does not provide a `trackEvent` handler, the call resolves without an error, so plugins can always call it without checking the host version.
+Allows a plugin to report a product usage event to the Griffon UI. The payload is the usage event object provided by the plugin and is forwarded to the Griffon UI unchanged. The call resolves with whatever the Griffon UI handler returns, or with `undefined` when the host provides no `trackEvent` handler — unlike the other methods, it never rejects for a missing method, so plugins can always call it without checking the host version. If the Griffon UI handler throws or returns a rejected promise, the `trackEvent` call rejects the same way; since usage tracking is fire-and-forget, plugins that do not handle the result should attach a `.catch()`. Because the payload is forwarded unchanged from a cross-origin plugin, Griffon UIs should validate or allow-list its fields (and cap its size) before passing it on to their analytics.
 
 ##### uploadPlugin
 

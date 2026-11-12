@@ -14,6 +14,11 @@ import { loadIframe, ERROR_CODES } from '../../src/parent';
 
 const NOOP = () => {};
 
+// The no-outcome guard in waitForTrackEventOutcome (4s) must sit comfortably inside
+// the spec timeout, so allow slow CI more budget than Jasmine's 5s default. The
+// fake-clock spec below ticks manually and is unaffected.
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 8000;
+
 // The griffonAPIs fixture reports back how its trackEvent call settled, so a
 // spec can assert that the child's promise actually resolved rather than the
 // call failing silently. Only messages from the given iframe count, so a
@@ -55,6 +60,7 @@ describe('parent', () => {
   afterEach(() => {
     if (bridge) {
       bridge.destroy();
+      bridge.iframe.remove();
     }
   });
 
@@ -227,21 +233,27 @@ describe('parent', () => {
 
 describe('older host without a trackEvent method', () => {
   let connection;
+  let iframe;
 
   afterEach(() => {
     if (connection) {
       connection.destroy();
     }
+    if (iframe) {
+      iframe.remove();
+    }
   });
 
   it('resolves trackEvent when the host does not advertise it', (done) => {
-    const iframe = document.createElement('iframe');
+    iframe = document.createElement('iframe');
     iframe.src = `http://${window.location.hostname}:9800/griffonAPIs.html`;
     document.body.appendChild(iframe);
 
     const outcome = waitForTrackEventOutcome(iframe);
 
     // The method set a pre-0.5.0 host advertises: everything except trackEvent.
+    // This mirrors the loadIframe handshake in src/parent.js by hand so the fixture
+    // talks to a pre-0.5.0 parent — if that handshake changes, update both together.
     connection = connectToChild({
       iframe,
       methods: {
